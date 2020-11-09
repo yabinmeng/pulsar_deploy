@@ -1,0 +1,81 @@
+---
+- hosts: pulsar_broker
+  gather_facts: false
+  any_errors_fatal: true
+  become: true
+  become_method: sudo
+  tasks:
+  - name: Check if Pulsar broker is already running
+    stat:
+      path: "{{ tgt_pulsar_inst_dir }}/bin/pulsar-broker.pid"
+    register: stat_result
+  - name: Stop Pulsar broker server if it is running
+    shell: "{{ tgt_pulsar_inst_dir }}/bin/pulsar-daemon stop broker"
+    when: stat_result.stat.exists
+
+- hosts: bookkeeper
+  gather_facts: false
+  any_errors_fatal: true
+  become: true
+  become_method: sudo
+  tasks:
+  - name: Check if bookkeeper server is already running
+    stat:
+      path: "{{ tgt_pulsar_inst_dir }}/bin/pulsar-bookie.pid"
+    register: stat_result
+  - name: Stop bookkeeper server if it is running
+    shell: "{{ tgt_pulsar_inst_dir }}/bin/pulsar-daemon stop bookie"
+    when: stat_result.stat.exists
+
+- hosts: zookeeper
+  gather_facts: false
+  any_errors_fatal: true
+  become: true
+  become_method: sudo
+  tasks:
+  - name: Check if zookeeper server is already running
+    stat:
+      path: "{{ tgt_pulsar_inst_dir }}/bin/pulsar-zookeeper.pid"
+    register: stat_result
+  - name: Stop zookeeper server if it is running
+    shell: "{{ tgt_pulsar_inst_dir }}/bin/pulsar-daemon stop zookeeper"
+    when: stat_result.stat.exists
+
+- hosts: pulsar_broker
+  gather_facts: false
+  any_errors_fatal: true
+  become: true
+  become_method: sudo
+  tasks:
+  - name: Delete installation directory if requested
+    file:
+      path: "{{ tgt_pulsar_inst_dir }}"
+      state: absent
+    when:
+      (del_inst is defined) and (del_inst|bool == True)
+
+- hosts: bookkeeper
+  gather_facts: false
+  any_errors_fatal: true
+  become: true
+  become_method: sudo
+  tasks:
+  - name: Delete installation directory if requested
+    file:
+      path: "{{ tgt_pulsar_inst_dir }}"
+      state: absent
+    when:
+      (standalone_bk|bool == true) and (del_inst is defined) and (del_inst|bool == True)
+
+- hosts: zookeeper
+  gather_facts: false
+  any_errors_fatal: true
+  become: true
+  become_method: sudo
+  tasks:
+  - name: Delete installation directory if requested
+    file:
+      path: "{{ tgt_pulsar_inst_dir }}"
+      state: absent
+    when:
+      (standalone_zk|bool == true) and (del_inst is defined) and (del_inst|bool == True)

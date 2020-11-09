@@ -1,0 +1,55 @@
+---
+- name: Create a zookeeper config file from the sample file
+  copy:
+    src: "{{ tgt_zk_inst_dir }}/conf/zoo_sample.cfg"
+    remote_src: yes
+    dest: "{{ tgt_zk_inst_dir }}/conf/zoo.cfg"
+    owner: "{{ zk_user }}"    
+    group: "{{ zk_user }}"
+
+- name: Modify zookeeper config file data directory
+  lineinfile:
+    path: "{{ tgt_zk_inst_dir }}/conf/zoo.cfg"
+    regexp: '^dataDir='
+    line: "dataDir={{ tgt_zk_inst_dir }}/data"
+
+- name: Modify zookeeper config for 4lw words whitelist
+  lineinfile:
+    path: "{{ tgt_zk_inst_dir }}/conf/zoo.cfg"
+    line: 4lw.commands.whitelist=*
+
+- name: Get zookeeper node list (with port numbers)
+  set_fact:
+    zknodelist: "{{ groups['zk_srv'] | map('extract', hostvars, ['ansible_default_ipv4','address']) | map('regex_replace', '^(.*)$','\\1:2888:3888') | list }}"
+#- debug: msg="{{ zknodelist }}"
+
+- name: Modify zookeeper config fiile to add 
+  lineinfile:
+    path: "{{ tgt_zk_inst_dir }}/conf/zoo.cfg"
+    line: "server.{{ item.0 + 1 }}={{ item.1 }}"
+  with_indexed_items:
+    - "{{ zknodelist }}"
+
+#- debug: msg="{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+
+- name: Run command to get zookeeper server ID
+  shell: grep {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }} {{ tgt_zk_inst_dir }}/conf/zoo.cfg | awk -F'=' '{print $1}' | awk -F'.' '{print $2}'
+  register: cmdoutput
+
+- name: Set fact of zookeeper server ID
+  set_fact: myid={{ cmdoutput.stdout }}
+
+- name: Create folder "{{ tgt_zk_inst_dir }}/data"
+  file:
+    path: "{{ tgt_zk_inst_dir }}/data"
+    state: directory
+    owner: "{{ zk_user }}"
+    group: "{{ zk_user }}"
+
+- name: Define myid file for each zookeeper server
+  copy:
+    dest: "{{ tgt_zk_inst_dir }}/data/myid"
+    owner: "{{ zk_user }}"
+    group: "{{ zk_user }}"
+    content: |
+      {{ myid }}

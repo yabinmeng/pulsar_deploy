@@ -1,0 +1,45 @@
+---
+- name: Add a system user "{{ zk_user }}"
+  user: 
+    name: "{{ zk_user }}"
+    create_home: false
+    system: yes
+    state: present
+
+- name: Create folder "{{ tgt_pkg_dir }}" 
+  file:
+    path: "{{ tgt_pkg_dir }}"
+    state: directory
+    recurse: yes
+    owner: "{{ zk_user }}"
+    group: "{{ zk_user }}"
+
+- name: Download zookeeper version "{{ zk_ver }}"
+  get_url:
+    url: "{{ zk_download_url }}"
+    dest: "{{ tgt_pkg_dir }}/apache-zookeeper-{{ zk_ver }}-bin.tar.gz"
+    owner: "{{ zk_user }}"
+    group: "{{ zk_user }}"
+
+- name: Create folder "{{ tgt_zk_inst_dir }}"
+  file:
+    path: "{{ tgt_zk_inst_dir }}"
+    state: directory
+    owner: "{{ zk_user }}"
+    group: "{{ zk_user }}"
+
+- name: Extract downloaded archive file to folder "{{ tgt_zk_inst_dir }}r"
+  unarchive:
+    src: "{{ tgt_pkg_dir }}/apache-zookeeper-{{ zk_ver }}-bin.tar.gz"
+    remote_src: yes
+    dest: "{{ tgt_zk_inst_dir }}"
+    extra_opts: [--strip-components=1]
+    owner: "{{ zk_user }}"    
+    group: "{{ zk_user }}"
+
+- name: Fix permissions on the extract directory and sub-directories
+  file:
+    path: "{{ tgt_zk_inst_dir }}"
+    owner: "{{ zk_user }}"    
+    group: "{{ zk_user }}"
+    recurse: yes

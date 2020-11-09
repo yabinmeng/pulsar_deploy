@@ -1,0 +1,10 @@
+---
+- hosts: zk_srv
+  gather_facts: true
+  any_errors_fatal: true
+  become: true
+  become_method: sudo
+  roles: 
+  - { role: inst_zk_bin }
+  - { role: zk_cluster_cfg }
+  - { role: cfg_start_zk_svc }

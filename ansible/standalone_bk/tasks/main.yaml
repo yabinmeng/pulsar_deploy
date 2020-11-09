@@ -1,0 +1,48 @@
+---
+    - name: Add a system user "{{ bk_user }}"
+      user: 
+        name: "{{ bk_user }}"
+        create_home: false
+        system: yes
+        state: present
+    
+    - name: Create folder "{{ tgt_pkg_dir }}" 
+      file:
+        path: "{{ tgt_pkg_dir }}"
+        state: directory
+    
+    - name: Create folder "{{ tgt_bk_inst_dir }}"
+      file:
+        path: "{{ tgt_bk_inst_dir }}"
+        state: directory
+        owner: "{{ bk_user }}"
+        group: "{{ bk_user }}"
+    
+    - name: Check if the target bookkeeper binary file arealdy exists
+      stat:
+        path: "{{ tgt_pkg_dir }}/bookkeeper-server-{{ bk_ver }}-bin.tar.gz"
+      register: stat_result
+    
+    - name: Download bookkeeper version "{{ bk_ver }}"
+      get_url:
+        url: "{{ bk_download_url }}"
+        dest: "{{ tgt_pkg_dir }}"
+        owner: "{{ bk_user }}"
+        group: "{{ bk_user }}"
+      when: not stat_result.stat.exists
+    
+    - name: Extract downloaded archive file to folder "/opt/bookkeeper"
+      unarchive:
+        src: "{{ tgt_pkg_dir }}/bookkeeper-server-{{ bk_ver }}-bin.tar.gz"
+        remote_src: yes
+        dest: "{{ tgt_bk_inst_dir }}"
+        extra_opts: [--strip-components=1]
+        owner: "{{ bk_user }}"    
+        group: "{{ bk_user }}"
+    
+    - name: Fix permissions on the extract directory and sub-directories
+      file:
+        path: "{{ tgt_bk_inst_dir }}"
+        owner: "{{ bk_user }}"    
+        group: "{{ bk_user }}"
+        recurse: yes

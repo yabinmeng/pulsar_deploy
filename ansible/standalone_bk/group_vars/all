@@ -1,0 +1,8 @@
+bk_user: bk
+bk_ver: 4.11.1
+bk_download_url: "https://apache.claz.org/bookkeeper/bookkeeper-{{ bk_ver }}/bookkeeper-server-{{ bk_ver }}-bin.tar.gz"
+
+bk_svc_name: bk
+
+tgt_pkg_dir: /opt/packages
+tgt_bk_inst_dir: /opt/bookkeeper

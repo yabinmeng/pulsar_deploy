@@ -1,0 +1,35 @@
+---
+- name: Create a Systemd Unit file for zookeeper
+  copy:
+    dest: /etc/systemd/system/{{ zk_svc_name }}.service
+    content: |
+      [Unit]
+      Description=Zookeeper Daemon
+      Documentation=http://zookeeper.apache.org
+      Requires=network.target
+      After=network.target
+
+      [Service]
+      Type=forking
+      WorkingDirectory={{ tgt_zk_inst_dir }}
+      User={{ zk_user }}
+      Group={{ zk_user }}
+      ExecStart={{ tgt_zk_inst_dir }}/bin/zkServer.sh start {{ tgt_zk_inst_dir }}/conf/zoo.cfg
+      ExecStop={{ tgt_zk_inst_dir }}/bin/zkServer.sh stop {{ tgt_zk_inst_dir }}/conf/zoo.cfg
+      ExecReload={{ tgt_zk_inst_dir }}/bin/zkServer.sh restart {{ tgt_zk_inst_dir }}/conf/zoo.cfg
+      TimeoutSec=30
+      Restart=on-failure
+
+      [Install]
+      WantedBy=default.target
+
+- name: Start zookeeper service
+  service:
+    name: "{{ zk_svc_name }}"
+    state: restarted
+
+- name: Wait for Zookeeper client listening port (2181) is ready
+  wait_for:
+    port: 2181
+    delay: 1
+    state: started

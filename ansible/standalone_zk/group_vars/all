@@ -1,0 +1,14 @@
+zk_ver: 3.6.2
+
+# External Apache website for Zookeeper
+# zk_download_url_base: https://apache.claz.org/zookeeper
+# Internal DS Apache mirror website for Zookeeper (DS VPN is needed)
+zk_download_url_base: http://repomirror.sjc.dsinternal.org/apache/zookeeper
+
+zk_download_url: "{{ zk_download_url_base }}/zookeeper-{{ zk_ver }}/apache-zookeeper-{{ zk_ver }}-bin.tar.gz"
+
+zk_user: zk
+zk_svc_name: zk
+
+tgt_pkg_dir: /opt/packages/zookeeper
+tgt_zk_inst_dir: /opt/zookeeper

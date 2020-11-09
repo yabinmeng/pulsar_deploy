@@ -1,0 +1,50 @@
+---
+- name: Get the nubmer of brokers
+  set_fact:
+    broker_node_cnt: "{{ groups['pulsar_broker'] | length }}"
+
+- name: Set ensemble size, write, and ack quorum count
+  set_fact:
+    ensemble_size: "{% if broker_node_cnt | int > 1 %}2{% else %}1{% endif %}"
+    write_quorum_cnt: "{% if broker_node_cnt | int > 1 %}2{% else %}1{% endif %}"
+    ack_quorum_cnt: "{% if broker_node_cnt | int > 1 %}2{% else %}1{% endif %}"
+
+- name: Modify Pulsar broker config file - {{ pbroker_conf_file }}
+  lineinfile:
+    path: "{{ pbroker_conf_file }}"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: '^zookeeperServers=', line: 'zookeeperServers={{ zk_list_str }}' }
+    - { regexp: '^configurationStoreServers=', line: 'configurationStoreServers={{ zk_list_str }}' }
+    - { regexp: '^clusterName=', line: 'clusterName={{ pulsar_cluster_name }}' }
+    - { regexp: '^brokerServicePort=', line: 'brokerServicePort={{ broker_svc_port }}' }
+    - { regexp: '^brokerServicePortTls=', line: 'brokerServicePortTls={{ broker_svc_port_tls }}' }
+    - { regexp: '^webServicePort=', line: 'webServicePort={{ web_svc_port }}' }
+    - { regexp: '^webServicePortTls=', line: 'webServicePortTls={{ web_svc_port_tls }}' }
+    - { regexp: '^managedLedgerDefaultEnsembleSize=', line: 'managedLedgerDefaultEnsembleSize={{ ensemble_size }}'}
+    - { regexp: '^managedLedgerDefaultWriteQuorum=', line: 'managedLedgerDefaultWriteQuorum={{ write_quorum_cnt }}' }
+    - { regexp: '^managedLedgerDefaultAckQuorum=', line: 'managedLedgerDefaultAckQuorum={{ write_quorum_cnt }}' }
+    - { regexp: '^functionsWorkerEnabled=', line: 'functionsWorkerEnabled={{ enable_broker_function }}'}
+
+- name: Modify Pulsar broker function worker yaml file (functions_worker.yml), when function is enabled
+  lineinfile:
+    path: "{{ pbroker_func_worker_file }}"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: '^pulsarFunctionsCluster:', line: 'pulsarFunctionsCluster: {{ pulsar_cluster_name }}' }
+  when:
+    - enable_broker_function | bool
+
+- name: Check if Pulsar broker is already running
+  stat:
+    path: "{{ tgt_pulsar_inst_dir }}/bin/pulsar-broker.pid"
+  register: stat_result
+
+- name: Start Pulsar broker, if it is not running yet
+  become: true
+  become_method: sudo
+  become_user: "{{ pulsar_user }}"
+  shell: "{{ tgt_pulsar_inst_dir }}/bin/pulsar-daemon start broker"
+  when: not stat_result.stat.exists

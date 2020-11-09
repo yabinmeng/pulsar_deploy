@@ -1,0 +1,57 @@
+---
+- name: Modify zookeeper config for customized settings
+  lineinfile:
+    path: "{{ zk_conf_file }}"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: '^clientPort=', line: 'clientPort={{ zk_clnt_port }}' }
+    - { regexp: '^admin.enableServer=', line: 'admin.enableServer={{ zk_admin_srv_enable | lower}}' }
+    - { regexp: '^admin.serverPort=', line: 'admin.serverPort={{ zk_admin_srv_port }}' }
+
+# Optional: to make it easy for running zookeeper commands
+- name: Modify zookeeper config to add 4lw words whitelist
+  lineinfile:
+    path: "{{ zk_conf_file }}"
+    line: 4lw.commands.whitelist=*
+
+- name: Modify zookeeper config fiile to add zookeeper node list
+  lineinfile:
+    path: "{{ zk_conf_file }}"
+    line: "server.{{ item.0 + 1 }}={{ item.1 }}"
+  with_indexed_items:
+    - "{{ zknode_cfg_list }}"
+
+- name: Create zookeeper data folder - "{{ zk_data_dir }}"
+  file:
+    path: "{{ zk_data_dir }}"
+    state: directory
+    owner: "{{ pulsar_user }}"
+    group: "{{ pulsar_user }}"
+
+- name: Get zookeeper server ID
+  shell: grep {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }} {{ zk_conf_file }} | awk -F'=' '{print $1}' | awk -F'.' '{print $2}'
+  register: cmdoutput
+
+- name: Set fact of zookeeper server ID
+  set_fact: myid={{ cmdoutput.stdout }}
+
+- name: Define myid file for each zookeeper server
+  copy:
+    dest: "{{ zk_data_dir }}/myid"
+    owner: "{{ pulsar_user }}"
+    group: "{{ pulsar_user }}"
+    content: |
+      {{ myid }}
+
+- name: Check if zookeeper server is already running
+  stat:
+    path: "{{ tgt_pulsar_inst_dir }}/bin/pulsar-zookeeper.pid"
+  register: stat_result
+
+- name: Start zookeeper server, if it is not running yet
+  become: true
+  become_method: sudo
+  become_user: "{{ pulsar_user }}"
+  shell: PULSAR_EXTRA_OPTS="-Dstats_server_port={{ local_zk_stats_port }}" {{ tgt_pulsar_inst_dir }}/bin/pulsar-daemon start zookeeper
+  when: not stat_result.stat.exists
