@@ -98,3 +98,18 @@ enable_broker_function: true
 # -------------------------------------------
 #
 pulsar_client_config_file: "{{ tgt_pulsar_inst_dir }}/conf/client.conf"
+
+
+
+#
+#  Pulsar manager specific settings
+# -------------------------------------------
+#
+pulsar_manager_ver: 0.2.0
+
+pulsar_manager_bin_download_url: "{{ pulsar_download_url_base }}/pulsar-manager/pulsar-manager-{{ pulsar_manager_ver }}/apache-pulsar-manager-{{ pulsar_manager_ver }}-bin.tar.gz"
+
+tgt_pkg_dir_pm: /opt/packages/pulsar-manager
+tgt_pulsar_mgr_inst_dir: /opt/pulsar-manager
+
+pulsar_mgr_webui_port: 7750
