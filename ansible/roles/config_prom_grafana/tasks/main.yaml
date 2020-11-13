@@ -60,10 +60,3 @@
     path: "{{ tgt_metrics_compose_homedir }}/prometheus/tg_pulsar.json"
     regexp: "{{ pulsar_zookeeper_scape_target_template_tag }}"
     replace: "{{ zookeeper_scrape_list_cmdcat.stdout | to_json | regex_replace(', ', '\", \"') }}"
-
-- name: Launch a prometheus and grafana container using docker-compose
-  docker_compose:
-    project_src: "{{ tgt_metrics_compose_homedir }}/prometheus/"
-  register: dc_output
-# - debug:     
-#     var: dc_output

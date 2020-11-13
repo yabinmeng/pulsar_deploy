@@ -1,0 +1,4 @@
+- name: Stop prometheus and grafana containers using docker-compose
+  docker_compose:
+    project_src: "{{ tgt_metrics_compose_homedir }}/prometheus/"
+    state: absent

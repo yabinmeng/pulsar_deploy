@@ -5,8 +5,7 @@
   become: true
   become_method: sudo
   roles: 
-    - { role: inst_pulsar_bin, when: inst_pulsar_bin is defined and inst_pulsar_bin|bool}
-
+    - { role: inst_pulsar_bin, when: inst_pulsar_bin is not defined or inst_pulsar_bin|bool}
 
 
 
