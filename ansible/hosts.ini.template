@@ -1,0 +1,11 @@
+[pulsar_cluster_core]
+<pulsar_core_server1_ip> zookeeper=true bookie=true broker=true
+<pulsar_core_server2_ip> zookeeper=true bookie=true broker=true
+<pulsar_core_server3_ip> zookeeper=true bookie=true broker=true
+
+[pulsar_cluster_external]
+<pulsar_external_server1_ip> pulsar_manager=true metrics_monitor=true
+
+[pulsar_clnt:children]
+pulsar_cluster_core
+pulsar_cluster_external
