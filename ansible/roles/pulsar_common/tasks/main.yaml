@@ -1,0 +1,77 @@
+---
+##
+# Get Zookeeper node list in main zookeeper configuration file, e.g.
+#   <zookeeper_node_1>:2888:3888
+#   <zookeeper_node_2>:2888:3888
+#   <zookeeper_node_3>:2888:3888
+- name: Get zookeeper configuration (IP:Port:Port) list (No DNS) into a temporary file "/tmp/zkcfg_list"
+  template: src=zklist.j2 dest=/tmp/zkcfg_list mode=0664
+
+- name: Load tempoarary "zkcfg_list" file
+  shell: cat /tmp/zkcfg_list
+  register: zkcfg_list_cmdcat
+
+- name:  Set "zookeeper" configuration (IP:Port:Port) list into a variable
+  set_fact: 
+    zknode_cfg_list={{ zkcfg_list_cmdcat.stdout }}
+- debug: msg="{{ zknode_cfg_list }}"
+  when: show_debug_msg|bool
+
+# - name: Delete tempoarary zklist config file
+#   file: 
+#     src: /tmp/zkcfg_list
+#     state: absent
+
+##
+# Get a string for one zookeeper node with listening port, e.g.
+#   <zookeeper_node_1>:2181
+- name: Get one Zookeeper node (IP:Port) (No DNS)
+  set_fact:
+    zk_url_str: "{% for node in play_hosts if hostvars[node].zookeeper is defined and hostvars[node].zookeeper|bool %}{% if loop.first %}{{ node }}:2181{% endif %}{% endfor %}"
+- debug: msg="{{ zk_url_str }}"
+  when: show_debug_msg|bool
+
+##
+# Get a string for all zookeeper nodes with listening ports, e.g.
+#   <zookeeper_node_1>:2181,<zookeeper_node_2>:2181,<zookeeper_node_3>:2181
+- name: Get "zookeeper" (IP:Port) list (No DNS)
+  set_fact:
+    zk_list_str: "{% for node in play_hosts if hostvars[node].zookeeper is defined and hostvars[node].zookeeper|bool %}{{ node }}:2181{% if not loop.last %},{% endif %}{% endfor %}"
+- debug: msg="{{ zk_list_str }}"
+  when: show_debug_msg|bool
+
+##
+# Get a string for all pulsar borker nodes with web service listening ports, e.g.
+#   <broker_node_1>:6550,<broker_node_2>:6550,<broker_node_3>:6550
+- name: Get "web-service-url" (IP:Port) list (No DNS)
+  set_fact:
+    web_service_url_str: "{% for node in play_hosts if hostvars[node].broker is defined and hostvars[node].broker|bool %}{{ node }}:{{ web_svc_port }}{% if not loop.last %},{% endif %}{% endfor %}"
+- debug: msg="{{ web_service_url_str }}"
+  when: show_debug_msg|bool
+
+##
+# Get a string for all pulsar borker nodes with web service TLS listening ports, e.g.
+#   <broker_node_1>:6551,<broker_node_2>:6551,<broker_node_3>:6551
+- name: Get "web-service-url-tls" (IP:Port) list (No DNS)
+  set_fact:
+    web_service_url_tls_str: "{% for node in play_hosts if hostvars[node].broker is defined and hostvars[node].broker|bool %}{{ node }}:{{ web_svc_port_tls }}{% if not loop.last %},{% endif %}{% endfor %}"
+- debug: msg="{{ web_service_url_tls_str }}"
+  when: show_debug_msg|bool
+
+##
+# Get a string for all pulsar borker nodes with broker service listening ports, e.g.
+#   <broker_node_1>:8080,<broker_node_2>:8080,<broker_node_3>:8080
+- name: Get "broker-service-url" (IP:Port) list (No DNS)
+  set_fact:
+    broker_service_url_str: "{% for node in play_hosts if hostvars[node].broker is defined and hostvars[node].broker|bool %}{{ node }}:{{ broker_svc_port }}{% if not loop.last %},{% endif %}{% endfor %}"
+- debug: msg="{{ broker_service_url_str }}"
+  when: show_debug_msg|bool
+
+##
+# Get a string for all pulsar borker nodes with broker service TLS listening ports, e.g.
+#   <broker_node_1>:8443,<broker_node_2>:8443,<broker_node_3>:8443
+- name: Get "broker-service-url-tls" (IP:Port) list (No DNS)
+  set_fact:
+    broker_service_url_tls_str: "{% for node in play_hosts if hostvars[node].broker is defined and hostvars[node].broker|bool %}{{ node }}:{{ broker_svc_port_tls }}{% if not loop.last %},{% endif %}{% endfor %}"
+- debug: msg="{{ broker_service_url_tls_str }}"
+  when: show_debug_msg|bool

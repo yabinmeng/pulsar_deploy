@@ -1,0 +1,14 @@
+[zookeeper]
+<zookeeper_host_1>
+<zookeeper_host_2>
+<zookeeper_host_3>
+
+[bookkeeper]
+<bookie_host_1>
+<bookie_host_2>
+<bookie_host_3>
+
+[pulsar_broker]
+<broker_host_1>
+<broker_host_2>
+<broker_host_3>

@@ -1,0 +1,9 @@
+---
+- name: Check if zookeeper server is already running
+  stat:
+    path: "{{ tgt_pulsar_inst_dir }}/bin/pulsar-zookeeper.pid"
+  register: stat_result
+  
+- name: Stop zookeeper server if it is running
+  shell: "{{ tgt_pulsar_inst_dir }}/bin/pulsar-daemon stop zookeeper"
+  when: stat_result.stat.exists

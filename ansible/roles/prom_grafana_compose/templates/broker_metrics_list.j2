@@ -1,0 +1,5 @@
+{% set metrics_list = [] %}
+{% for node in groups['pulsar_cluster_core'] if hostvars[node].broker is defined and hostvars[node].broker|bool %}
+{% set ignored = metrics_list.append(node + ':' + web_svc_port|string) %}
+{% endfor %}
+{{ metrics_list | join(', ') }}

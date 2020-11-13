@@ -1,0 +1,41 @@
+version: "3.8"
+
+volumes:
+    prometheus_data: {}
+    grafana_data: {}
+
+services:
+  graphite-exporter:
+    container_name: graphite-exporter
+    image: "prom/graphite-exporter"
+    ports:
+      - "9109:9109"
+    
+  prometheus:
+    container_name: prometheus
+    image: "prom/prometheus:latest"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yaml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention=365d'
+      - '--storage.tsdb.allow-overlapping-blocks'
+    ports:
+      - "9090:9090"
+    volumes:
+      - prometheus_data:/prometheus
+      - ./prometheus/:/etc/prometheus/
+    depends_on:
+      - "graphite-exporter"
+
+  grafana:
+    container_name: grafana
+    image: "grafana/grafana:latest"
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./grafana/grafana.cfg
+    volumes:
+      - grafana_data:/var/lib/grafana"
+      - ./grafana/provisioning/:/etc/grafana/provisioning/  
+    depends_on:
+      - "prometheus"

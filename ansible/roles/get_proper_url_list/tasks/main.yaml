@@ -1,0 +1,41 @@
+##
+# NOTE 
+# -------
+# > This role is used to work with the OLD inventory file "host.ini.old" where there are no host-specific variables
+# > For the NEW inventory file "hosts.ini" where host-specific varaibles are defined, please use role "pulsar_common"
+# 
+---
+- name: Get one Zookeeper node (IP:Port) (No DNS)
+  set_fact:
+    zk_url_str: "{{ groups['zookeeper'][0] }}:{{ zk_clnt_port }}"
+#- debug: msg="{{ zk_url_str }}"
+
+- name: Get "zookeeper" (IP:Port) list (No DNS)
+  set_fact:
+    zk_list_str: "{{ groups['zookeeper'] | map('extract', hostvars, ['ansible_default_ipv4','address']) | join(':{{ zk_clnt_port }},') }}:{{ zk_clnt_port }}"
+#- debug: msg="{{ zk_list_str }}"
+
+- name: Get "zookeeper" configuration (IP:Port:Port) list (No DNS)
+  set_fact:
+    zknode_cfg_list: "{{ groups['zookeeper'] | map('extract', hostvars, ['ansible_default_ipv4','address']) | map('regex_replace', '^(.*)$','\\1:2888:3888') | list }}"
+#- debug: msg="{{ zknode_cfg_list }}"
+
+- name: Get "web-service-url" (IP:Port) list (No DNS)
+  set_fact:
+    web_service_url_str: "{{ groups['pulsar_broker'] | map('extract', hostvars, ['ansible_default_ipv4','address'])  | join(':{{ web_svc_port }},') }}:{{ web_svc_port }}"
+#- debug: msg="{{ web_service_url_str }}"
+
+- name: Get "web-service-url-tls" (IP:Port) list (No DNS)
+  set_fact:
+    web_service_url_tls_str: "{{ groups['pulsar_broker'] | map('extract', hostvars, ['ansible_default_ipv4','address']) | join(':{{ web_svc_port_tls }},') }}:{{ web_svc_port_tls }}"
+#- debug: msg="{{ web_service_url_tls_str }}"
+
+- name: Get "broker-service-url" (IP:Port) list (No DNS)
+  set_fact:
+    broker_service_url_str: "{{ groups['pulsar_broker'] | map('extract', hostvars, ['ansible_default_ipv4','address']) | join(':{{ broker_svc_port }},') }}:{{ broker_svc_port }}"
+#- debug: msg="{{ broker_service_url_str }}"
+
+- name: Get "broker-service-url-tls" (IP:Port) list (No DNS)
+  set_fact:
+    broker_service_url_tls_str: "{{ groups['pulsar_broker'] | map('extract', hostvars, ['ansible_default_ipv4','address']) | join(':{{ broker_svc_port_tls }},') }}:{{ broker_svc_port_tls }}"
+#- debug: msg="{{ broker_service_url_tls_str }}"

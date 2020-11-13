@@ -1,0 +1,23 @@
+---
+- name: Get Pulsar manager API access token
+  uri: 
+    url: http://localhost:7750/pulsar-manager/csrf-token
+  register: token_output
+#- debug: msg={{ token_output.x_csrf_token }}
+
+- name: Create an admin user
+  vars:
+    pulsar_mgr_admin_user_registration:
+      name: pulsar
+      password: pulsar
+      email: username@test.org
+  uri:
+    url: http://localhost:7750/pulsar-manager/users/superuser
+    method: PUT
+    headers:
+      X-XSRF-TOKEN: "{{ token_output.x_csrf_token }}"
+      Cookie: XSRF-TOKEN={{ token_output.x_csrf_token }}
+      Content-Type: application/json
+    body: '{{ pulsar_mgr_admin_user_registration|to_json }}'
+  register: api_put_response
+#- debug: msg={{ api_put_response }}

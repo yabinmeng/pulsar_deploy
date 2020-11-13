@@ -1,0 +1,9 @@
+---
+- name: Check if Pulsar broker is already running
+  stat:
+    path: "{{ tgt_pulsar_inst_dir }}/bin/pulsar-broker.pid"
+  register: stat_result
+  
+- name: Stop Pulsar broker server if it is running
+  shell: "{{ tgt_pulsar_inst_dir }}/bin/pulsar-daemon stop broker"
+  when: stat_result.stat.exists

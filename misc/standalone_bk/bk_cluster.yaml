@@ -1,0 +1,9 @@
+# TBD
+---
+- hosts: bk_srv
+  gather_facts: true
+  any_errors_fatal: true
+  become: true
+  become_method: sudo
+  roles: 
+  - { role: inst_bk_bin }

@@ -1,0 +1,8 @@
+---
+- name: Modify bookkeeper config file - {{ bk_conf_file }}
+  lineinfile:
+    path: "{{ bk_conf_file }}"
+    regexp: '^zkServers='
+    line: "zkServers={{ zk_list_str }}"
+
+  

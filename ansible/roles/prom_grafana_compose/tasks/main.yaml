@@ -1,0 +1,69 @@
+--- 
+- name: Copy prometheus and grafana docker-compose.yaml file to remote
+  file: 
+    path: "{{ tgt_metrics_compose_homedir }}"
+    state: directory
+    mode: 0755
+
+- name: Upload docker-compose files
+  copy: 
+    src: "../docker/prom_grafana/"
+    dest: "{{ tgt_metrics_compose_homedir }}"
+
+- name: Generate "prometheus.yaml" file from the template
+  copy:
+    src: "{{ tgt_metrics_compose_homedir }}/prometheus/prometheus.yaml.template"
+    remote_src: true
+    dest: "{{ tgt_metrics_compose_homedir }}/prometheus/prometheus.yaml"
+    
+- name: Generate Prometheus target scrape json files from the template (borker, bookie, and zookeeper)
+  copy:
+    src: "{{ tgt_metrics_compose_homedir }}/prometheus/pulsar_scrape.json.template"
+    remote_src: true
+    dest: "{{ tgt_metrics_compose_homedir }}/prometheus/tg_pulsar.json"
+
+- name: Replace template string for Pulsar cluster name in "prometheus.yaml" file
+  replace:
+    path: "{{ tgt_metrics_compose_homedir }}/prometheus/{{ item }}"
+    regexp: "{{ pulsar_cluster_name_template_tag }}"
+    replace: "{{ pulsar_cluster_name }}"
+  with_items:
+    - "prometheus.yaml"
+    - "tg_pulsar.json"
+
+- template: src={{ item }}_metrics_list.j2 dest=/tmp/{{ item }}_scrape_list mode=0664
+  with_items:
+    - broker
+    - bookie
+    - zookeeper
+
+- shell: cat /tmp/broker_scrape_list
+  register: "broker_scrape_list_cmdcat"
+- name: Replace template string in scrape target node list file for brokers
+  replace:
+    path: "{{ tgt_metrics_compose_homedir }}/prometheus/tg_pulsar.json"
+    regexp: "{{ pulsar_broker_scape_target_template_tag }}"
+    replace: "{{ broker_scrape_list_cmdcat.stdout | to_json | regex_replace(', ', '\", \"') }}"
+
+- shell: cat /tmp/bookie_scrape_list
+  register: "bookie_scrape_list_cmdcat"
+- name: Replace template string in scrape target node list file for bookies
+  replace:
+    path: "{{ tgt_metrics_compose_homedir }}/prometheus/tg_pulsar.json"
+    regexp: "{{ pulsar_bookie_scape_target_template_tag }}"
+    replace: "{{ bookie_scrape_list_cmdcat.stdout | to_json | regex_replace(', ', '\", \"') }}"
+
+- shell: cat /tmp/zookeeper_scrape_list
+  register: "zookeeper_scrape_list_cmdcat"    
+- name: Replace template string in scrape target node list file for zookeepers
+  replace:
+    path: "{{ tgt_metrics_compose_homedir }}/prometheus/tg_pulsar.json"
+    regexp: "{{ pulsar_zookeeper_scape_target_template_tag }}"
+    replace: "{{ zookeeper_scrape_list_cmdcat.stdout | to_json | regex_replace(', ', '\", \"') }}"
+
+- name: Launch a prometheus and grafana container using docker-compose
+  docker_compose:
+    project_src: "{{ tgt_metrics_compose_homedir }}/prometheus/"
+  register: dc_output
+# - debug:     
+#     var: dc_output

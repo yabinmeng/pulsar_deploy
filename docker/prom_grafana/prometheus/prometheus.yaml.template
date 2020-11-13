@@ -1,0 +1,22 @@
+global:
+  # By default, scrape targets every 15 seconds.
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  # By default, scrape times out after 10 seconds.
+  scrape_timeout: 10s
+
+scrape_configs:
+  - job_name: prometheus_srv
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+    static_configs:
+    - targets:
+      - localhost:9090
+
+  - job_name: <PULSAR_CLUSTER>
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+    honor_labels: true
+    file_sd_configs:
+      - files:
+        - './tg_pulsar.json'

@@ -1,0 +1,24 @@
+---
+- name: Get Pulsar Manager PID
+  shell: netstat -ntlp | grep {{ pulsar_mgr_webui_port }} | awk '{print $7}' | awk -F'/' '{print $1}'
+  register: pm_pid_output
+#- debug: msg={{ pm_pid_output }}
+
+- name: Start Pulsar Manager
+  become: true
+  # become_method: sudo
+  # become_user: "{{ pulsar_user }}"
+  shell: "bin/pulsar-manager &"
+  args: 
+    chdir: "{{ tgt_pulsar_mgr_inst_dir }}"
+  async: 120
+  poll: 0
+  register: pm_cmd_output
+  when: pm_pid_output.stdout == ""
+
+- name: Wait until Pulsar manager Web UI port {{ pulsar_mgr_webui_port }} is ready
+  wait_for:
+    host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+    port: "{{ pulsar_mgr_webui_port }}"
+    delay: 2
+    timeout: 120

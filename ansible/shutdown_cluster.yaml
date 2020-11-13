@@ -1,0 +1,33 @@
+---
+- hosts: pulsar_cluster_core
+  gather_facts: false
+  any_errors_fatal: true
+  become: true
+  become_method: sudo
+  roles:
+    - { role: stop_svc_broker, when: broker|bool }
+    - { role: stop_svc_bookie, when: bookie|bool }
+    - { role: stop_svc_zookeeper, when: zookeeper|bool }
+
+
+- hosts: pulsar_cluster_external
+  gather_facts: false
+  any_errors_fatal: true
+  become: true
+  become_method: sudo
+  roles:
+    - { role: stop_svc_pulsar_mgr, when: pulsar_manager|bool }
+
+
+- hosts: pulsar_clnt
+  gather_facts: false
+  any_errors_fatal: true
+  become: true
+  become_method: sudo
+  tasks:
+  - name: Delete installation directory if requested
+    file:
+      path: "{{ tgt_pulsar_inst_dir }}"
+      state: absent
+    when:
+      del_inst is defined and del_inst|bool

@@ -1,0 +1,147 @@
+#
+# General settings
+# -------------------------------------------
+#
+show_debug_msg: false
+
+
+#
+# Pulsar binary download URL
+# -------------------------------------------
+#
+pulsar_ver: 2.6.1
+
+# External Apache website for Pulsar
+#pulsar_download_url_base: https://archive.apache.org/dist/pulsar
+# Internal DS Apache mirror website for zookeeper (DS VPN is needed)
+pulsar_download_url_base: http://repomirror.sjc.dsinternal.org/apache/pulsar
+
+pulsar_bin_download_url: "{{ pulsar_download_url_base }}/pulsar-{{ pulsar_ver }}/apache-pulsar-{{ pulsar_ver }}-bin.tar.gz"
+
+pulsar_connector_download_url_base: "{{ pulsar_download_url_base }}/pulsar-{{ pulsar_ver }}/connectors"
+
+pulsar_ts_offloader_bin_download_url: "{{ pulsar_download_url_base }}/pulsar-{{ pulsar_ver }}/apache-pulsar-offloaders-{{ pulsar_ver }}-bin.tar.gz"
+
+
+
+#
+# General information regarindg Pulsar cluster
+# -------------------------------------------
+#
+# Enable Pulsar I/O Connectors
+builtin_connector: true
+pulsar_connectors:
+  # Source connectors
+  - file
+  - netty
+  # Sink connectors
+  - cassandra
+
+# Enable Pulsar TieredStorage (TS) offloaders
+tierstorage_offloader: true
+
+pulsar_user: pulsar
+pulsar_svc_name: pulsar
+
+tgt_pkg_dir: /opt/packages/pulsar
+tgt_pulsar_inst_dir: /opt/pulsar
+
+standalone_zk: false
+standalone_bk: false
+
+
+#
+# Whether we deploy bookie and broker with a shared zookeeper cluster
+#
+share_zk: true
+
+
+#
+#  Zookeeper specific settings
+# -------------------------------------------
+#
+zk_conf_file: "{{ tgt_pulsar_inst_dir }}/conf/zookeeper.conf"
+zk_data_dir: "{{ tgt_pulsar_inst_dir }}/data/zookeeper"
+
+zk_clnt_port: 2181
+zk_admin_srv_enable: true
+zk_admin_srv_port: 9990
+
+##
+# This is the metrics port for Zookeepers (default port: 8000, path: "/metrics")
+# - If deploying Zookeeper and Bookie on the same node, need to start zookeeper with different stats port.
+# - PULSAR_EXTRA_OPTS="-Dstats_server_port=<custom_port>"
+zk_stats_port_standalone: 8000
+zk_stats_port_share: 8010
+zk_stats_port: "{% if not share_zk | bool %}{{ zk_stats_port_standalone }}{% else %}{{ zk_stats_port_share }}{% endif %}"
+
+
+#
+#  Bookkeeper specific settings
+# -------------------------------------------
+#
+bk_conf_file: "{{ tgt_pulsar_inst_dir }}/conf/bookkeeper.conf"
+
+bookie_listening_port: 3181
+
+##
+# This is the metrics port for Bookie (default port: 8000, path: "/metrics")
+# - see comment about "zk_stats_port"
+bk_stats_port: 8000
+
+
+
+#
+#  Pulsar broker specific settings
+# -------------------------------------------
+#
+pbroker_conf_file: "{{ tgt_pulsar_inst_dir }}/conf/broker.conf"
+pbroker_func_worker_file: "{{ tgt_pulsar_inst_dir }}/conf/functions_worker.yml"
+
+pulsar_cluster_name: mypulsar_cluster
+
+broker_svc_port: 6550
+broker_svc_port_tls: 6551
+# Broker metrics are also exposed at port 8080, at path "/metrics"
+web_svc_port: 8080
+web_svc_port_tls: 8443
+
+enable_broker_function: true
+
+
+
+#
+#  Pulsar client specific settings
+# -------------------------------------------
+#
+pulsar_client_config_file: "{{ tgt_pulsar_inst_dir }}/conf/client.conf"
+
+
+
+#
+#  Pulsar manager specific settings
+# -------------------------------------------
+#
+pulsar_manager_ver: 0.2.0
+
+pulsar_manager_bin_download_url: "{{ pulsar_download_url_base }}/pulsar-manager/pulsar-manager-{{ pulsar_manager_ver }}/apache-pulsar-manager-{{ pulsar_manager_ver }}-bin.tar.gz"
+
+tgt_pkg_dir_pm: /opt/packages/pulsar-manager
+tgt_pulsar_mgr_inst_dir: /opt/pulsar-manager
+
+pulsar_mgr_webui_port: 7750
+
+
+
+#
+#  Prometheus and Grafana docker container settings
+# -------------------------------------------
+#
+url_docker_debian_pkg: https://download.docker.com/linux/ubuntu
+
+tgt_metrics_compose_homedir: /opt/pulsar-metrics
+
+pulsar_cluster_name_template_tag: <PULSAR_CLUSTER>
+pulsar_broker_scape_target_template_tag: <BROKER_NODE_IP_PORT_ARRAY>
+pulsar_bookie_scape_target_template_tag: <BOOKIE_NODE_IP_PORT_ARRAY>
+pulsar_zookeeper_scape_target_template_tag: <ZOOKEEPER_NODE_IP_PORT_ARRAY>

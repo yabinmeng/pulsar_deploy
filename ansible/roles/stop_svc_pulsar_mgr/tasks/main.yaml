@@ -1,0 +1,16 @@
+---
+- name: Get Pulsar Manager PID
+  shell: netstat -ntlp | grep {{ pulsar_mgr_webui_port }} | awk '{print $7}' | awk -F'/' '{print $1}'
+  register: pm_pid_output
+#- debug: msg={{ pm_pid_output }}
+
+- name: Kill Pulsar Manager if the server process exists
+  shell: kill {{ pm_pid_output.stdout }}
+  when: pm_pid_output.stdout != ""
+
+- name: Delete installation directory if requested
+  file:
+    path: "{{ tgt_pulsar_mgr_inst_dir }}"
+    state: absent
+  when:
+    (del_inst is defined) and (del_inst|bool == True)

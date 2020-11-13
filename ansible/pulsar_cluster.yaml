@@ -1,0 +1,50 @@
+---
+- hosts: pulsar_clnt
+  gather_facts: false
+  any_errors_fatal: true
+  become: true
+  become_method: sudo
+  roles: 
+    - { role: inst_pulsar_bin, when: inst_pulsar_bin is defined and inst_pulsar_bin|bool}
+
+
+
+
+- hosts: pulsar_cluster_core
+  gather_facts: true
+  any_errors_fatal: true
+  become: true
+  become_method: sudo
+  roles: 
+    # Get required node:port strings that are needed in various configuration files
+    - { role: pulsar_common, run_once: true }
+    # Config and start zookeepers  
+    - { role: config_zookeeper, when: not standalone_zk|bool and zookeeper|bool }
+    - { role: start_svc_zookeeper, when: not standalone_zk|bool and zookeeper|bool }
+    # Initialzie cluster metadata
+    - { role: init_cluster_metadata, run_once: true }
+    # Config and start bookies
+    - { role: config_bookkeeper, when: not standalone_bk|bool and bookie|bool }
+    - { role: start_svc_bookie, when: not standalone_bk|bool and bookie|bool }
+    # Config and start brokers
+    - { role: config_pulsar_broker, when: broker|bool }
+    - { role: start_svc_broker, when: broker|bool }
+  tasks:
+    # Test whether bookie functions properly
+    - name: Verifiy whether bookie works properly by running "bin/bookkeeper shell bookiesanity" command
+      shell: "{{ tgt_pulsar_inst_dir }}/bin/bookkeeper shell bookiesanity > bookie_sanity_check.result"
+      register: bookie_shell_output
+      when: not standalone_bk|bool and bookie|bool
+    - debug: msg="{{ bookie_shell_output }}"
+      when: show_debug_msg|bool
+
+
+
+- hosts: pulsar_clnt
+  gather_facts: true
+  any_errors_fatal: true
+  become: true
+  become_method: sudo
+  roles: 
+    - { role: pulsar_common, run_once: true }
+    - { role: config_pulsar_client }

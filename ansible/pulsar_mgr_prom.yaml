@@ -1,0 +1,17 @@
+---
+- hosts: pulsar_cluster_external
+  gather_facts: true
+  any_errors_fatal: true
+  become: true
+  become_method: sudo
+  collections:
+    # for docker and docker-compose
+    - community.general
+  roles:
+    # Pulsar managger related tasks
+    # - { role: inst_config_pulsar_mgr_bin, when: pulsar_manager|bool }
+    # - { role: start_svc_pulsar_mgr, when: pulsar_manager|bool }
+    # - { role: pulsar_mgr_admin_user, when: pulsar_manager|bool }
+    # Prometheus and Grafana related tasks (using docker-compose)
+    # - { role: docker_runtime, when: metrics_monitor|bool }
+    - { role: prom_grafana_compose, when: metrics_monitor|bool }
