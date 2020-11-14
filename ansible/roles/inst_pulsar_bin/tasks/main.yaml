@@ -93,6 +93,6 @@
   file:
     path: "{{ tgt_pulsar_inst_dir }}/logs/"
     state: directory
-    mode: 0775
+    mode: 0777
     owner: "{{ pulsar_user }}"    
     group: "{{ pulsar_user }}"  

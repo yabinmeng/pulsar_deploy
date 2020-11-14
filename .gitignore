@@ -1,2 +1,4 @@
 /.DS_Store
 /apache_pulsar.code-workspace
+ansible/hosts.ini
+.gitignore
