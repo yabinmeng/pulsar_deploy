@@ -27,6 +27,17 @@ ansible-galaxy collection install community.general
 * Remote host OS version: ***Ubuntu*** 16.04.7 LTS 
   **NOTE**: If the remote host has a different OS (e.g. CentOS), the framework needs to be tweaked to reflect OS difference (e.g. apt vs yum)
 
+## Host Inventory File Structure
+
+Before running the Ansible playbooks, make sure to create a host inventory file, **hosts.ini**, by copying from the provided template file, **hosts.ini.template**. In the host inventory file, there are 4 groups:
+
+1. **pulsar_cluster_core**
+
+List all Pulsar instance host machines (for zookeepers, bookies, and brokers) under this group. Depending on the actual deployment, one host machines can be configured as being shared by differnt server components. The configuration of having what server components running on one  host machine is conotrolled by the associated Ansible varaiables after each host machine IP, as below:
+
+  <pulsar_core_server1_ip> **zookeeper**=*[true|false]* **bookie**=*[true|false]* **broker**=*[true|false]*
+
+
 ##  Ansible Playbook
 
 There are 3 Ansible playbooks in this repo., their description is as below:
@@ -47,7 +58,6 @@ The execution of "shutdown_cluster.yaml" can also take an extra variable which c
 ansible-playbook -i hosts.ini shutdown_cluster.yaml --extra-vars "del_inst=[true|false]" --private-key=<private_ssh_key> -u <ssh_user>
 ```
 
-### Host Inventory File Structure
 
 
 
