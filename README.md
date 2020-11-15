@@ -8,7 +8,7 @@ The Ansible framework aims to automate the provisioning of a Pulsar instance of 
 * A Zookkeeper cluster
 * A Bookkeeper cluster
 * A Pulsar broker cluster
-* A Pulsar manager to manage the Pulsar Instance
+* A Pulsar manager for Web UI based management of the Pulsar Instance
 
 * A docker-compose based Prometheus server to scrape metrics from the Pulsar Instance
 * A docker-compose based Grafana server to view Pulsar Instance metrics dashboards
@@ -58,8 +58,7 @@ List the IP of the host machine where Prometheus and Grafana servers are going t
 
 List all host machines where Pulsar client libraries are needed. Any host machine that runs a Pulsar client application, including those bundled Pulsar command client tools like "pulsar-admin", "pulsar-client", "pulsar-perf", etc., that needs to connect the Pulsar instance falls under this group.
 
-
-##  Ansible Playbook
+##  Ansible Playbooks
 
 There are 3 Ansible playbooks in this repo., their description is as below:
 
@@ -79,6 +78,31 @@ The execution of "shutdown_cluster.yaml" can also take an extra variable which c
 ansible-playbook -i hosts.ini shutdown_cluster.yaml --extra-vars "del_inst=[true|false]" --private-key=<private_ssh_key> -u <ssh_user>
 ```
 
+# Pulsar Instance
 
-### Install and Configure a Pulsar Instance
+After successfully executing the Ansible playbook (**pulsar_cluster.yaml**), a Pulsar instance is up and running. On each host machien where one Pulsar instance component server (zookeeper/bookie/broker) is running, 
 
+* A system user is created: **pulsar**
+* The Pulsar instance binary is installed in folder: **/opt/pulsar**
+* Depending on which server components are running, we should see the following listening ports on the host machine:
+
+| Server Componet | Port | Description |
+| Zookeeper | 2181 | Zookeeper listening port for client connection |  
+| Zookeeper | 9990 | The embedded Jetty server port for Zookeeper AdminServer (new in Zookeeper version 3.5.0) |
+| Zookeeper | 8000/8010 | Prometheus stats port <br> - 8000: If Zookeeper and bookie are not sharing the same server instance <br> - 8010: If Zookeeper and bookie does share the same server instance |
+| Bookie | 8000 | Prometheus stats port |
+| Bookie | 3181 | Bookie listening port |
+| (Pulsar) Broker | 6550 |  Broker data port |
+| (Pulsar) Broker | 6551 |  Broker data port with TLS |
+| (Pulsar) Broker | 8080 |  Broker HTTP request service port |
+| (Pulsar) Broker | 8443 |  Broker HTTP request service port with TLS |
+
+## Zookeeper
+
+
+
+# Pulsar Manager
+
+
+
+# Deploy Prometheus and Grafana to Monitor the Pulsar Instance
