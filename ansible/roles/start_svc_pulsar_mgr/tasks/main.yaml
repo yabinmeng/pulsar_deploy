@@ -18,7 +18,6 @@
 
 - name: Wait until Pulsar manager Web UI port {{ pulsar_mgr_webui_port }} is ready
   wait_for:
-    host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
     port: "{{ pulsar_mgr_webui_port }}"
     delay: 2
     timeout: 120

@@ -1,6 +1,6 @@
 - name: Check if docker-compose.yaml file exists
   stat:
-    path: "{{ tgt_metrics_compose_homedir }}/prometheus/docker-compose.yaml"
+    path: "{{ tgt_metrics_compose_homedir }}/docker-compose.yaml"
   register: dc_file
 
 - name: Stop prometheus and grafana containers using docker-compose

@@ -49,9 +49,9 @@
     name: docker
     state: present
 
-- name: Add remote user "{{ ansible_env.SUDO_USER }} to "docker" group
+- name: Add remote user to "docker" group
   user:
-    name: "{{ ansible_env.SUDO_USER }}"
+    name: "{{ ansible_user }}"
     groups: "docker"
     append: yes
 

@@ -47,7 +47,7 @@ The execution of "shutdown_cluster.yaml" can also take an extra variable which c
 ansible-playbook -i hosts.ini shutdown_cluster.yaml --extra-vars "del_inst=[true|false]" --private-key=<private_ssh_key> -u <ssh_user>
 ```
 
-### Host Inventory File
+### Host Inventory File Structure
 
 
 
