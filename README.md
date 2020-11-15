@@ -13,6 +13,15 @@ The Ansible framework aims to automate the provisioning of a Pulsar instance of 
 * A docker-compose based Prometheus server to scrape metrics from the Pulsar Instance
 * A docker-compose based Grafana server to view Pulsar Instance metrics dashboards
 
+###  Current Limitation
+
+At the omoment, there are several limitations of the Ansible framework in this repo.:
+
+*  It only supports a single cluster Pulsar instance deployment. It does NOT support deploying a Pulsar instance that has multiple Pulsar clusters.
+*  It does NOT have security features enabled such as authentication, authorization, encryption, and etc.
+
+These Ansible framework in this repo. will be improved in the future to lift these limitations.
+
 # Usage Description
 
 ## Testing Environment
@@ -35,7 +44,19 @@ Before running the Ansible playbooks, make sure to create a host inventory file,
 
 List all Pulsar instance host machines (for zookeepers, bookies, and brokers) under this group. Depending on the actual deployment, one host machines can be configured as being shared by differnt server components. The configuration of having what server components running on one  host machine is conotrolled by the associated Ansible varaiables after each host machine IP, as below:
 
-  <pulsar_core_server1_ip> **zookeeper**=*[true|false]* **bookie**=*[true|false]* **broker**=*[true|false]*
+  * <pulsar_core_server1_ip> **zookeeper**=*[true|false]* **bookie**=*[true|false]* **broker**=*[true|false]*
+
+2. **pulsar_manager**
+
+List the IP of the host machine where Pulsar manager is going to run. One host machine is good enough in this group.
+
+3. **pulsar_metrics**
+
+List the IP of the host machine where Prometheus and Grafana servers are going to run. The Pulsar instance server metrics (zookeepers, bookies, and brokers) can be dispalyed and viewed from Prometheus and Grafana web UIs. One host machine is good enough in this group.
+
+4. **pulsar_clnt**
+
+List all host machines where Pulsar client libraries are needed. Any host machine that runs a Pulsar client application, including those bundled Pulsar command client tools like "pulsar-admin", "pulsar-client", "pulsar-perf", etc., that needs to connect the Pulsar instance falls under this group.
 
 
 ##  Ansible Playbook
@@ -44,7 +65,7 @@ There are 3 Ansible playbooks in this repo., their description is as below:
 
 | Ansible Playbook Name | Description |
 | --------------------- | ----------- |
-| pulsar_cluster.yaml | Install and configure a Pulsar Instance and all including server components |
+| pulsar_cluster.yaml | Install and configure all server components of a Pulsar Instance |
 | pulsar_mgr_prom.yaml | Install Pulsar manager and docker-compose based Prometheus and Grafana servers |
 | shutdown_cluster.yaml | Shut down and clean up the provisioned server components |
 
@@ -57,8 +78,6 @@ The execution of "shutdown_cluster.yaml" can also take an extra variable which c
 ```
 ansible-playbook -i hosts.ini shutdown_cluster.yaml --extra-vars "del_inst=[true|false]" --private-key=<private_ssh_key> -u <ssh_user>
 ```
-
-
 
 
 ### Install and Configure a Pulsar Instance
