@@ -87,6 +87,7 @@ After successfully executing the Ansible playbook (**pulsar_cluster.yaml**), a P
 * Depending on which server components are running, we should see the following listening ports on the host machine:
 
 | Server Componet | Port | Description |
+| --------------- | ---- | ----------- |
 | Zookeeper | 2181 | Zookeeper listening port for client connection |  
 | Zookeeper | 9990 | The embedded Jetty server port for Zookeeper AdminServer (new in Zookeeper version 3.5.0) |
 | Zookeeper | 8000/8010 | Prometheus stats port <br> - 8000: If Zookeeper and bookie are not sharing the same server instance <br> - 8010: If Zookeeper and bookie does share the same server instance |
