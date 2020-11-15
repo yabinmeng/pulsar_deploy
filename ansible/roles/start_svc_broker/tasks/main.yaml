@@ -15,7 +15,7 @@
   wait_for:
     host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
     port: "{{ item }}"
-    delay: 5
+    delay: 2
     timeout: 120
   with_items:
     - "{{ broker_svc_port }}"

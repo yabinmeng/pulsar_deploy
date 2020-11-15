@@ -33,7 +33,7 @@ There are 3 Ansible playbooks in this repo., their description is as below:
 
 | Ansible Playbook Name | Description |
 | --------------------- | ----------- |
-| pulsar_cluster.yaml | Install and configure the Pulsar Instance and all including server components |
+| pulsar_cluster.yaml | Install and configure a Pulsar Instance and all including server components |
 | pulsar_mgr_prom.yaml | Install Pulsar manager and docker-compose based Prometheus and Grafana servers |
 | shutdown_cluster.yaml | Shut down and clean up the provisioned server components |
 
@@ -41,4 +41,15 @@ The command to exeucte an Ansible playblook is as below:
 ```
 ansible-playbook -i hosts.ini <ansible_playbook.yaml> --private-key=<private_ssh_key> -u <ssh_user>
 ```
+
+The execution of "shutdown_cluster.yaml" can also take an extra variable which controls whehter or not to delete the downloaded server software binaries.
+```
+ansible-playbook -i hosts.ini shutdown_cluster.yaml --extra-vars "del_inst=[true|false]" --private-key=<private_ssh_key> -u <ssh_user>
+```
+
+### Host Inventory File
+
+
+
+### Install and Configure a Pulsar Instance
 

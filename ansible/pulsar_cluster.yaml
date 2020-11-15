@@ -1,4 +1,5 @@
 ---
+# Download Pulsar binaries
 - hosts: pulsar_clnt
   gather_facts: false
   any_errors_fatal: true
@@ -8,7 +9,7 @@
     - { role: inst_pulsar_bin, when: inst_pulsar_bin is not defined or inst_pulsar_bin|bool}
 
 
-
+# Make necessary configuration changes for all Pulsar components
 - hosts: pulsar_cluster_core
   gather_facts: true
   any_errors_fatal: true
@@ -19,17 +20,45 @@
     - { role: pulsar_common, run_once: true }
     # Config and start zookeepers  
     - { role: config_zookeeper, when: not standalone_zk|bool and zookeeper|bool }
-    - { role: start_svc_zookeeper, when: not standalone_zk|bool and zookeeper|bool }
-    # Initialzie cluster metadata
-    - { role: init_cluster_metadata, run_once: true }
     # Config and start bookies
     - { role: config_bookkeeper, when: not standalone_bk|bool and bookie|bool }
-    - { role: start_svc_bookie, when: not standalone_bk|bool and bookie|bool }
     # Config and start brokers
     - { role: config_pulsar_broker, when: broker|bool }
-    - { role: start_svc_broker, when: broker|bool }
+
+
+# Start Zookeeper nodes first, one by one
+- hosts: pulsar_cluster_core
+  gather_facts: false
+  any_errors_fatal: true
+  become: true
+  become_method: sudo
+  serial: 1
+  roles: 
+    - { role: start_svc_zookeeper, when: not standalone_zk|bool and zookeeper|bool }
+
+
+# Initialzie cluster metadata after Zookeeper is up
+- hosts: pulsar_cluster_core
+  gather_facts: false
+  any_errors_fatal: true
+  become: true
+  become_method: sudo
+  run_once: true
+  roles: 
+    - { role: init_cluster_metadata, run_once: true }
+
+
+# Start Bookkeeper nodes, one by one
+- hosts: pulsar_cluster_core
+  gather_facts: false
+  any_errors_fatal: true
+  become: true
+  become_method: sudo
+  serial: 1
+  roles: 
+    - { role: start_svc_bookie, when: not standalone_bk|bool and bookie|bool }
   tasks:
-    # Test whether bookie functions properly
+    # Test whether bookie functions properly after they're up and running
     - name: Verifiy whether bookie works properly by running "bin/bookkeeper shell bookiesanity" command
       shell: "{{ tgt_pulsar_inst_dir }}/bin/bookkeeper shell bookiesanity > bookie_sanity_check.result"
       register: bookie_shell_output
@@ -38,7 +67,18 @@
       when: show_debug_msg|bool
 
 
+# Start Pulsar broker nodes, one by one
+- hosts: pulsar_cluster_core
+  gather_facts: false
+  any_errors_fatal: true
+  become: true
+  become_method: sudo
+  serial: 1
+  roles: 
+    - { role: start_svc_broker, when: broker|bool }
 
+
+# Configure Pulsar client
 - hosts: pulsar_clnt
   gather_facts: true
   any_errors_fatal: true

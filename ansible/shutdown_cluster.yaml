@@ -5,19 +5,18 @@
   become: true
   become_method: sudo
   roles:
-    - { role: stop_svc_broker, when: broker|bool }
-    - { role: stop_svc_bookie, when: bookie|bool }
-    - { role: stop_svc_zookeeper, when: zookeeper|bool }
+    - { role: stop_svc_broker, when: broker|bool, serial: 1 }
+    - { role: stop_svc_bookie, when: bookie|bool, serial: 1 }
+    - { role: stop_svc_zookeeper, when: zookeeper|bool, serial: 1 }
 
 
-- hosts: pulsar_cluster_external
+- hosts: pulsar_manager
   gather_facts: false
   any_errors_fatal: true
   become: true
   become_method: sudo
   roles:
-    - { role: stop_svc_pulsar_mgr, when: pulsar_manager|bool }
-    - { role: stop_svc_prom_graf, when: metrics_monitor|bool }
+    - { role: stop_svc_pulsar_mgr }
 
 
 - hosts: pulsar_clnt
@@ -34,15 +33,17 @@
       del_inst is defined and del_inst|bool
 
 
-- hosts: pulsar_cluster_external
+- hosts: pulsar_metrics
   gather_facts: false
   any_errors_fatal: true
   become: true
   become_method: sudo
+  roles:
+    - { role: stop_svc_prom_graf }
   tasks:
   - name: Delete pulsar metrics docker compose folder if requested
     file:
       path: "{{ tgt_metrics_compose_homedir }}"
       state: absent
     when:
-      metrics_monitor|bool and del_inst is defined and del_inst|bool
+      del_inst is defined and del_inst|bool

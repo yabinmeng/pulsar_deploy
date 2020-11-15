@@ -1,3 +1,12 @@
+- name: Check if docker-compose.yaml file exists
+  stat:
+    path: "{{ tgt_metrics_compose_homedir }}/prometheus/docker-compose.yaml"
+  register: dc_file
+
+- fail:
+    msg: "Can't find docker-compose.yaml file"
+  when: not dc_file.stat.exists
+
 - name: Launch prometheus and grafana containers using docker-compose
   docker_compose:
     project_src: "{{ tgt_metrics_compose_homedir }}/prometheus/"
