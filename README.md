@@ -44,7 +44,7 @@ The Ansible framework aims to automate the provisioning of a Pulsar instance of 
 
 ##  1.1. Current Limitation
 
-At the momoment, there are several limitations of the Ansible framework in this repo.:
+At the moment, there are several limitations of the Ansible framework in this repo.:
 
 1. It only supports a single cluster Pulsar instance deployment. It does NOT support deploying a Pulsar instance that has multiple Pulsar clusters.
 2. It doesn't yet have security features enabled such as authentication, authorization, encryption, and etc.
