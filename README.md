@@ -5,12 +5,13 @@
   - [2.2. Host Inventory File Structure](#22-host-inventory-file-structure)
   - [2.3. Ansible Playbooks](#23-ansible-playbooks)
 - [3. Pulsar Instance](#3-pulsar-instance)
-  - [3.1. Zookeepers](#31-zookeepers)
-    - [3.1.1. Zookeeper commands](#311-zookeeper-commands)
-    - [3.1.2. Zookeeper AdminServer](#312-zookeeper-adminserver)
-    - [3.1.3. Zookeeper Shell](#313-zookeeper-shell)
-  - [3.2. Bookies](#32-bookies)
-  - [3.3. Brokers](#33-brokers)
+  - [3.1. Deployment Overview](#31-deployment-overview)
+  - [3.2. Zookeepers](#32-zookeepers)
+    - [3.2.1. Zookeeper commands](#321-zookeeper-commands)
+    - [3.2.2. Zookeeper AdminServer](#322-zookeeper-adminserver)
+    - [3.2.3. Zookeeper Shell](#323-zookeeper-shell)
+  - [3.3. Bookies](#33-bookies)
+  - [3.4. Brokers](#34-brokers)
 - [4. Pulsar Manager](#4-pulsar-manager)
   - [4.1. Pulsar Manager Web UI](#41-pulsar-manager-web-ui)
   - [4.2. Bookkeeper Visual Manager UI](#42-bookkeeper-visual-manager-ui)
@@ -21,7 +22,7 @@
   - [5.2. Grafana Server](#52-grafana-server)
     - [5.2.1. Grafana WebUI and Data Source](#521-grafana-webui-and-data-source)
     - [5.2.2. Predefined Dashboard for the Pulsar Instance](#522-predefined-dashboard-for-the-pulsar-instance)
-- [6. Appendex A: Pulsar Connectors and Tiered Storage Offloaders](#6-appendex-a-pulsar-connectors-and-tiered-storage-offloaders)
+- [6. Appendix A: Pulsar Connectors and Tiered Storage Offloaders](#6-appendix-a-pulsar-connectors-and-tiered-storage-offloaders)
 - [7. Appendix B: Pulsar-perf](#7-appendix-b-pulsar-perf)
 
 
@@ -42,19 +43,20 @@ The Ansible framework aims to automate the provisioning of a Pulsar instance of 
 
 ##  1.1. Current Limitation
 
-At the omoment, there are several limitations of the Ansible framework in this repo.:
+At the momoment, there are several limitations of the Ansible framework in this repo.:
 
-*  It only supports a single cluster Pulsar instance deployment. It does NOT support deploying a Pulsar instance that has multiple Pulsar clusters.
-*  It does NOT have security features enabled such as authentication, authorization, encryption, and etc.
-*  Although the tieried storage offloading feature is enabled, the actual implementation mechanism (e.g. S3, GCS, or filesystem) is not in place yet.
+1. It only supports a single cluster Pulsar instance deployment. It does NOT support deploying a Pulsar instance that has multiple Pulsar clusters.
+2. It doesn't yet have security features enabled such as authentication, authorization, encryption, and etc.
+3. Although the tiered storage offloading enablement is supported, the actual implementation mechanism (e.g. S3, GCS, or filesystem) is not in place yet.
+4. It doesn't support the deployment of Pulsar proxy yet. For production deployment and/or for security purposes, a proxy based Pulsar instance deployment is preferred.
 
-These Ansible framework in this repo. will be improved in the future to lift these limitations.
+This Ansible framework in this repo. will be improved in the future to lift these limitations.
 
 # 2. Usage Description
 
 ## 2.1. Testing Environment
 
-The Ansible framework has beene tested in an enviornment with the following specification:
+The Ansible framework has been tested in an environment with the following specification:
 
 * Ansible version: ***2.10.2***
 * Ansible plugin: ***community.general*** (need to be installed first)
@@ -71,7 +73,7 @@ Before running the Ansible playbooks, make sure to create a host inventory file,
 
 1. **pulsar_cluster_core**
 
-List all Pulsar instance host machines (for zookeepers, bookies, and brokers) under this group. Depending on the actual deployment, one host machines can be configured as being shared by differnt server components. The configuration of having what server components running on one  host machine is conotrolled by the associated Ansible varaiables after each host machine IP, as below:
+List all Pulsar instance host machines (for zookeepers, bookies, and brokers) under this group. Depending on the actual deployment, one host machine can be configured as being shared by different server components. The configuration of having what server components running on one  host machine is controlled by the associated Ansible variables after each host machine IP, as below:
 
   * <pulsar_core_server1_ip> **zookeeper**=*[true|false]* **bookie**=*[true|false]* **broker**=*[true|false]*
 
@@ -81,7 +83,7 @@ List the IP of the host machine where Pulsar manager is going to run. One host m
 
 3. **pulsar_metrics**
 
-List the IP of the host machine where Prometheus and Grafana servers are going to run. The Pulsar instance server metrics (zookeepers, bookies, and brokers) can be dispalyed and viewed from Prometheus and Grafana web UIs. One host machine is good enough in this group.
+List the IP of the host machine where Prometheus and Grafana servers are going to run. The Pulsar instance server metrics (zookeepers, bookies, and brokers) can be displayed and viewed from Prometheus and Grafana web UIs. One host machine is good enough in this group.
 
 4. **pulsar_clnt**
 
@@ -97,26 +99,26 @@ There are 3 Ansible playbooks in this repo., their description is as below:
 | pulsar_mgr_prom.yaml | Install Pulsar manager and docker-compose based Prometheus and Grafana servers |
 | shutdown_cluster.yaml | Shut down and clean up the provisioned server components |
 
-The command to exeucte an Ansible playblook is as below:
+The command to execute an Ansible playbook is as below:
 ```
 ansible-playbook -i hosts.ini <ansible_playbook.yaml> --private-key=<private_ssh_key> -u <ssh_user>
 ```
 
-The execution of "shutdown_cluster.yaml" can also take an extra variable which controls whehter or not to delete the downloaded server software binaries.
+The execution of "shutdown_cluster.yaml" can also take an extra variable which controls whether or not to delete the downloaded server software binaries.
 ```
 ansible-playbook -i hosts.ini shutdown_cluster.yaml --extra-vars "del_inst=[true|false]" --private-key=<private_ssh_key> -u <ssh_user>
 ```
 
 # 3. Pulsar Instance
 
-After successfully executing the Ansible playbook (**pulsar_cluster.yaml**), a Pulsar instance is up and running. On each host machien where one Pulsar instance component server (zookeeper/bookie/broker) is running, 
+After successfully executing the Ansible playbook (**pulsar_cluster.yaml**), a Pulsar instance is up and running. On each host machine where one Pulsar instance component server (zookeeper/bookie/broker) is running, 
 
 * A system user is created: **pulsar**
 * The Pulsar instance binary (for all server components) is installed in folder: **/opt/pulsar**
 * Depending on which server components are running, we should see the following listening ports on the host machine:
 
-| Server Componet | Port | Ansible Variable | Description |
-| --------------- | ---- | ---------------- | ----------- |
+| Server Component | Port | Ansible Variable | Description |
+| ---------------- | ---- | ---------------- | ----------- |
 | Zookeeper | 2181 | zk_clnt_port | Zookeeper listening port for client connection |  
 | Zookeeper | 9990 | zk_admin_srv_port | The embedded Jetty server port for Zookeeper AdminServer (new in Zookeeper version 3.5.0) |
 | Zookeeper | 8000/8010 | zk_stats_port | Prometheus stats port <br> - 8000: If Zookeeper and bookie are not sharing the same server instance <br> - 8010: If Zookeeper and bookie does share the same server instance |
@@ -131,19 +133,32 @@ After successfully executing the Ansible playbook (**pulsar_cluster.yaml**), a P
 
 ---
 
-The main configuration files for the various Pulsar instance compoents are under folder: **/opt/pulsar/conf**. The configuration files that are touched by this playbook are the following ones:
+The main configuration files for the various Pulsar instance components are under folder: **/opt/pulsar/conf**. The configuration files that are modified by this playbook are the following ones:
 * zookeeper.conf
 * bookkeeper.conf
 * broker.conf
 * client.conf
 
-## 3.1. Zookeepers
+## 3.1. Deployment Overview
 
-### 3.1.1. Zookeeper commands
+The overall Pulsar instance deployment sequence using this framework is as below:
 
-In this playbook, all [Zookeeper "four-letter-words (4lw)" commands](https://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_zkCommands) and  white list is enabled through the following configuration:
+1. Download and install Pulsar binaries
+2. Make necessary configuration file changes based on server component types (zookeepers, bookies, and brokers)
+3. Start Zookeeper cluster (in sequence) and wait to verify all zookeeper servers are up and running
+   1. Initialize Pulsar cluster metadata
+4. Start Bookkeeper cluster (in sequence) and wait to verify all bookie servers are up and running
+5. Start Broker cluster (in sequence) and wait to verify all broker servers are up and running
+
+## 3.2. Zookeepers
+
+### 3.2.1. Zookeeper commands
+
+In this playbook, the [Zookeeper "four-letter-words (4lw)" command](https://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_zkCommands) can be enabled via the following Ansible variables. By default, when enabled, all Zookeeper 4lw commands are enabled. If only specific commands are allowed, please change the white list setting accordingly (individual commands separated by comma, e.g. ruok, stat)
+
 ```
-4lw.commands.whitelist=*
+4lw_enabled: true
+4lw_white_list: *
 ```
 
 From any server host machine where Zookeeper is running, we can run these 4lw commands on the command line to get the Zookeeper server information. An example is as below:
@@ -160,7 +175,9 @@ Mode: follower
 Node count: 105
 ```
 
-### 3.1.2. Zookeeper AdminServer
+**NOTE**
+
+### 3.2.2. Zookeeper AdminServer
 
 For Zookeeper version 3.5.0+, it includes an embedded Jetty server that provides a simple HTTP interface to Zookeeper's 4lw commands. For Pulsar 2.6.1 (as tested using this repo.), the corresponding Zookeeper version is 3.5.7 and therefore Zookeeper AdminServer is available and enabled by default at port 9990. In order to access Zookeeper AdminServer WebUI, access the following address:
 
@@ -168,7 +185,7 @@ For Zookeeper version 3.5.0+, it includes an embedded Jetty server that provides
 http://<zookeeper_node_ip>:9990/commands
 ```
 
-### 3.1.3. Zookeeper Shell
+### 3.2.3. Zookeeper Shell
 
 We can also launch a Zookeeper shell to check or set the Pulsar instance related metadata that is stored in the zookeeper. 
 
@@ -185,17 +202,56 @@ WatchedEvent state:SyncConnected type:None path:null
 
 For Zookeeper shell commands, please refer to Zookeeper document [here](https://zookeeper.apache.org/doc/r3.6.0/zookeeperCLI.html)
 
-## 3.2. Bookies
+## 3.3. Bookies
 
-**=== TBD ===**
+After each bookie server is up and running (e.g., port 3181 is in listening state), the playbook also does a quick sanity check for the bookie, using the following bookkeeper's shell command. The failure of this command will trigger an error and therefore stop the execution of the playbook.
 
-## 3.3. Brokers
+```
+$ bookkeeper shell bookiesanity
+```
 
-**=== TBD ===**
+There are many other bookkeeper shell commands that can be used to view and manage the bookies. For example, we can use the following command to get the free space of each bookie:
+
+```
+$ bookkeeper shell bookieinfo
+... ...
+Free disk space info:
+<bookie_ip_1>(<bookie_hostname_1>):3181:	Free: 35576426496(35.576GB)	Total: 40193699840(40.193GB)
+<bookie_ip_2>(<bookie_hostname_2>):3181:	Free: 35544129536(35.544GB)	Total: 40193699840(40.193GB)
+<bookie_ip_3>(<bookie_hostname_3>):3181:	Free: 35467866112(35.467GB)	Total: 40193699840(40.193GB)
+Total free disk space in the cluster:	106588422144(106.588GB)
+Total disk capacity in the cluster:	120581099520(120.581GB)
+... ... 
+```
+
+## 3.4. Brokers
+
+After each broker server is up and running (e.g., ports 6550/6551/8080/8443 are in listening state), we can test writing(producing)/reading(consuming) messages to/from any broker using the included **pulsar-client** utility. 
+
+In order to run any Pulsar client application, including **pulsar-client** utility, it needs to be configured first in order to make sure the proper web service and broker service URL are known to the client. The client configuration file is **client.conf** file and the playbook updates it properly on any host machines under Ansible **pulsar_clnt** group.
+
+The following command can be used to test producing a message to a broker:
+
+```
+$ sudo -u pulsar pulsar-client produce \
+  persistent://public/default/test \
+  -n 1 \
+  -m "Hello Pulsar"
+```
+
+The following command can be used to test consuming a message from a broker (in exclusive mode):
+
+```
+$ sudo -u pulsar pulsar-client consume \
+  persistent://public/default/test \
+  -n 100 \
+  -s "consumer-test" \
+  -t "Exclusive"
+```
 
 # 4. Pulsar Manager 
 
-Pulsar manager is a web-based utility tool to help managing and monitor a Pulsar instance, such  as enants, namespaces, topics, subscriptions, brokers, clusters, and so on. [Pulsar manager](https://pulsar.apache.org/docs/en/administration-pulsar-manager/) replaces the old, depercated Pulsar Dashboard. Pulsar manager is not part of standar Pulsar package. It can be downloaded from [here](https://github.com/apache/pulsar-manager). 
+Pulsar manager is a web-based utility tool to help manage and monitor a Pulsar instance, such  as tenants, namespaces, topics, subscriptions, brokers, clusters, and so on. [Pulsar manager](https://pulsar.apache.org/docs/en/administration-pulsar-manager/) replaces the old, deprecated Pulsar Dashboard. Pulsar manager is not part of standar Pulsar package. It can be downloaded from [here](https://github.com/apache/pulsar-manager). 
 
 Part of the Ansible playbook (**pulsar_mgr_prom.yaml**) is responsible for installing and configuring a Pulsar manager on the specified host machine. The Pulsar manager binaries are located under folder: **/opt/pulsar-manager**.
 
@@ -209,13 +265,13 @@ If running successfully, the following Pulsar manager listens on the following p
 
 ## 4.1. Pulsar Manager Web UI
 
-One Pulsar manager is able to monitor multiple Pulsar instance. In Pulsar manager, one Pulsar instance is called an **Environment**. In order to access the Pulsar manager web UI, use the following URL:
+One Pulsar manager is able to monitor multiple Pulsar instances. In Pulsar manager, one Pulsar instance is called an **Environment**. In order to access the Pulsar manager web UI, use the following URL:
 
 ```
 http://<pulsar_manager_host_ip>:7750/ui/index.html
 ```
 
-When prompted to enter user name and password, enter **pulsar**/**pulsar**. This adminstrative username and passowrd is created as part of running this playbook. Once logged in, Click "+ New Environment" button to add a Pulsar instance to manage. An example UI is as below (the managed Pulsar instance name is "mypulsar_instance")
+When prompted to enter user name and password, enter **pulsar**/**pulsar**. This administrative username and password is created as part of running this playbook. Once logged in, Click "+ New Environment" button to add a Pulsar instance to manage. An example UI is as below (the managed Pulsar instance name is "mypulsar_instance")
 
 <img src="https://github.com/yabinmeng/pulsar_deploy/blob/master/resources/Pulsar.Manager.Topics.jpg" width=800>
 
@@ -231,7 +287,7 @@ When prompted to enter user name and password, enter **admin**/**admin**
 
 # 5. Prometheus and Grafana to Monitor the Pulsar Instance
 
-Another part of the Ansible playbook (**pulsar_mgr_prom.yaml**) is to lauch docker containers, via docker-compose, on the specified host machine in order to view the metrics for the provisioned Pulsar instance. The Pulsar metrics binaries are located under folder: **/opt/pulsar-metrics**.
+Another part of the Ansible playbook (**pulsar_mgr_prom.yaml**) is to launch docker containers, via docker-compose, on the specified host machine in order to view the metrics for the provisioned Pulsar instance. The Pulsar metrics binaries are located under folder: **/opt/pulsar-metrics**.
 
 If running successfully, there are 3 launched containers with the following externally exposed ports:
 
@@ -275,7 +331,7 @@ The Grafana dashboard web UI can be accessed from the following URL:
 http://<pulsar_metrics_host_ip>:3000
 ```
 
-Once prompted for username and password, enter **admin/admin**. Since all metrics for the Pulsar instance are scaped into the Prometheus server that resides on the same host machine, the playbook defines one and the only one Grafana data source with the following info:
+Once prompted for username and password, enter **admin/admin**. Since all metrics for the Pulsar instance are scraped into the Prometheus server that resides on the same host machine, the playbook defines one and the only one Grafana data source with the following info:
 
 * Name: **prometheus**
 * HTTP URL: **http://prometheus:9090**
@@ -286,9 +342,9 @@ All other data source configuration remains default.
 
 **=== TBD ===**
 
-# 6. Appendex A: Pulsar Connectors and Tiered Storage Offloaders
+# 6. Appendix A: Pulsar Connectors and Tiered Storage Offloaders
 
-This Ansible framework provides support for Pulsar connectors through the following Ansible variables. Currently for testing purpose, 2 source connectors (file and netty) and 1 sink connector (Cassandra) are enabled. If more connectors, please add them accordingly in the list. 
+This Ansible framework provides support for Pulsar connectors through the following Ansible variables. Currently for testing purposes, 2 source connectors (file and netty) and 1 sink connector (Cassandra) are enabled. If more connectors, please add them accordingly in the list. 
 
 ```
 builtin_connector: true
@@ -300,9 +356,9 @@ pulsar_connectors:
   - cassandra
 ```
 
-For more information about Pulsar built-in connectors, please check Pulsar docments: [source connector](https://pulsar.apache.org/docs/en/io-connectors/#source-connector) and [sink connector](https://pulsar.apache.org/docs/en/io-connectors/#sink-connector)
+For more information about Pulsar built-in connectors, please check Pulsar documents: [source connector](https://pulsar.apache.org/docs/en/io-connectors/#source-connector) and [sink connector](https://pulsar.apache.org/docs/en/io-connectors/#sink-connector)
 
-Similarly, the framework also enables the capability of using tiered storage by the following Ansible variable. **NOTE** however, the actual implementation of using a specific tiered storage offloading meachnism (e.g. S3, GCS, filesystem, etc.) is NOT in place yet.
+Similarly, the framework also enables the capability of using tiered storage by the following Ansible variable. **NOTE** however, the actual implementation of using a specific tiered storage offloading mechanism (e.g. S3, GCS, filesystem, etc.) is NOT in place yet.
 
 ```
 tierstorage_offloader: true
@@ -313,21 +369,19 @@ tierstorage_offloader: true
 [Pulsar perf](https://pulsar.apache.org/docs/en/performance-pulsar-perf/) is a built-in performance test tool for Apache Pulsar. It can be used to test both producing and consuming messages. It provides a good amount of options to control the performance testing behavior such as:
 
 * the number of test threads
-* the number of producers for each topic
+* the number of producers/consumers for each topic
 * the number of topics
 * the maximum number of TCP connections per single broker
 * the maximum rate of producing/consuming messages across topics
 * message size and payload
 * ... ... 
 
-By default, Pulsar perf uses "**client.conf**" as the default configuration file. Therefore, in this repo, we can run Pulsar-perf against the provisioned Pulsar instance on any host machines under group **pulsar_clnt** (hosts.ini). This includes the server machine where we install Pulsar manager and all server machines within the Pulsar instance. 
+By default, Pulsar perf uses "**client.conf**" as the default configuration file. Therefore, in this repo, we can run Pulsar-perf against the provisioned Pulsar instance on any host machines under group **pulsar_clnt** (hosts.ini). This includes the host machine where we install Pulsar manager and all host machines within the Pulsar instance. 
 
 If a dedicated performance testing machine is preferred to run Pulsar-perf, we can create a seperate group (e.g. **pulsar_perf**) in the host inventory file and make sure to make it as a child of **pulsar_clnt** group, something like below:
 
 ```
-...
-[pulsar_metrics]
-<pulsar_metrics_host_ip>
+... ...
 
 [pulsar_perf]
 <pulsar_perf_host_ip>>

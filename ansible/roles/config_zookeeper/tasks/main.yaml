@@ -13,7 +13,8 @@
 - name: Modify zookeeper config to add 4lw words whitelist
   lineinfile:
     path: "{{ zk_conf_file }}"
-    line: 4lw.commands.whitelist=*
+    line: 4lw.commands.whitelist={{ 4lw_white_list }}
+  when: 4lw_enabled|bool
 
 - name: Modify zookeeper config fiile to add zookeeper node list
   lineinfile:
