@@ -46,6 +46,7 @@ At the omoment, there are several limitations of the Ansible framework in this r
 
 *  It only supports a single cluster Pulsar instance deployment. It does NOT support deploying a Pulsar instance that has multiple Pulsar clusters.
 *  It does NOT have security features enabled such as authentication, authorization, encryption, and etc.
+*  Although the tieried storage offloading feature is enabled, the actual implementation mechanism (e.g. S3, GCS, or filesystem) is not in place yet.
 
 These Ansible framework in this repo. will be improved in the future to lift these limitations.
 
@@ -124,7 +125,7 @@ After successfully executing the Ansible playbook (**pulsar_cluster.yaml**), a P
 | (Pulsar) Broker | 6550 | broker_svc_port | Broker data port |
 | (Pulsar) Broker | 6551 | broker_svc_port_tls | Broker data port with TLS |
 | (Pulsar) Broker | 8080 | web_svc_port | HTTP request service port <br> It also servers as Prometheus stats port |
-| (Pulsar) Broker | 8443 | web_svc_port | Broker HTTP request service port with TLS |
+| (Pulsar) Broker | 8443 | web_svc_port_tls | Broker HTTP request service port with TLS |
 
 **NOTE**: all the above ports are configurable through Ansible variables.
 
@@ -287,8 +288,52 @@ All other data source configuration remains default.
 
 # 6. Appendex A: Pulsar Connectors and Tiered Storage Offloaders
 
-**=== TBD ===**
+This Ansible framework provides support for Pulsar connectors through the following Ansible variables. Currently for testing purpose, 2 source connectors (file and netty) and 1 sink connector (Cassandra) are enabled. If more connectors, please add them accordingly in the list. 
+
+```
+builtin_connector: true
+pulsar_connectors:
+  # Source connectors
+  - file
+  - netty
+  # Sink connectors
+  - cassandra
+```
+
+For more information about Pulsar built-in connectors, please check Pulsar docments: [source connector](https://pulsar.apache.org/docs/en/io-connectors/#source-connector) and [sink connector](https://pulsar.apache.org/docs/en/io-connectors/#sink-connector)
+
+Similarly, the framework also enables the capability of using tiered storage by the following Ansible variable. **NOTE** however, the actual implementation of using a specific tiered storage offloading meachnism (e.g. S3, GCS, filesystem, etc.) is NOT in place yet.
+
+```
+tierstorage_offloader: true
+```
 
 # 7. Appendix B: Pulsar-perf
 
-**=== TBD ===**
+[Pulsar perf](https://pulsar.apache.org/docs/en/performance-pulsar-perf/) is a built-in performance test tool for Apache Pulsar. It can be used to test both producing and consuming messages. It provides a good amount of options to control the performance testing behavior such as:
+
+* the number of test threads
+* the number of producers for each topic
+* the number of topics
+* the maximum number of TCP connections per single broker
+* the maximum rate of producing/consuming messages across topics
+* message size and payload
+* ... ... 
+
+By default, Pulsar perf uses "**client.conf**" as the default configuration file. Therefore, in this repo, we can run Pulsar-perf against the provisioned Pulsar instance on any host machines under group **pulsar_clnt** (hosts.ini). This includes the server machine where we install Pulsar manager and all server machines within the Pulsar instance. 
+
+If a dedicated performance testing machine is preferred to run Pulsar-perf, we can create a seperate group (e.g. **pulsar_perf**) in the host inventory file and make sure to make it as a child of **pulsar_clnt** group, something like below:
+
+```
+...
+[pulsar_metrics]
+<pulsar_metrics_host_ip>
+
+[pulsar_perf]
+<pulsar_perf_host_ip>>
+
+[pulsar_clnt:children]
+pulsar_cluster_core
+pulsar_manager
+pulsar_perf
+```
