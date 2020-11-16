@@ -1,5 +1,5 @@
 - [1. Overview](#1-overview)
-    - [1.0.1. Current Limitation](#101-current-limitation)
+  - [1.1. Current Limitation](#11-current-limitation)
 - [2. Usage Description](#2-usage-description)
   - [2.1. Testing Environment](#21-testing-environment)
   - [2.2. Host Inventory File Structure](#22-host-inventory-file-structure)
@@ -40,7 +40,7 @@ The Ansible framework aims to automate the provisioning of a Pulsar instance of 
 * A docker-compose based Prometheus server to scrape metrics from the Pulsar Instance
 * A docker-compose based Grafana server to view Pulsar Instance metrics dashboards
 
-###  1.0.1. Current Limitation
+##  1.1. Current Limitation
 
 At the omoment, there are several limitations of the Ansible framework in this repo.:
 
