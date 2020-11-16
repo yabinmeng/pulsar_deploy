@@ -252,7 +252,13 @@ The Ansible playbook will automatically configure the Prometheus server to pick 
 
 ### 5.1.2. Prometheus Web UI
 
+Once Prometheus server is successfully up and running, we can view the available metrics for all Pulsar instance server components from Prometheus Targets web page at the following URL (followed by an example screenshot)
 
+```
+http://<pulsar_metrics_host_ip>:9090/targets
+```
+
+<img src="https://github.com/yabinmeng/pulsar_deploy/blob/master/resources/Prometheus.Targets.jpg" width=800>
 
 ## 5.2. Grafana Server
 
