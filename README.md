@@ -266,21 +266,21 @@ $ sudo -u pulsar pulsar-client consume \
 
 # 4. Pulsar Manager 
 
-Pulsar manager is a web-based utility tool to help manage and monitor a Pulsar instance, such  as tenants, namespaces, topics, subscriptions, brokers, clusters, and so on. [Pulsar manager](https://pulsar.apache.org/docs/en/administration-pulsar-manager/) replaces the old, deprecated Pulsar Dashboard. Pulsar manager is not part of standar Pulsar package. It can be downloaded from [here](https://github.com/apache/pulsar-manager). 
+Pulsar manager is a web-based utility tool to help manage and monitor a Pulsar instance, such  as tenants, namespaces, topics, subscriptions, brokers, clusters, and so on. [Pulsar manager](https://pulsar.apache.org/docs/en/administration-pulsar-manager/) replaces the old, deprecated Pulsar Dashboard. Pulsar manager is not part of standar Pulsar package and needs to be downloaded and installed separately ([GitHub Repo](https://github.com/apache/pulsar-manager)). 
 
-Part of the Ansible playbook (**pulsar_mgr_prom.yaml**) is responsible for installing and configuring a Pulsar manager on the specified host machine. The Pulsar manager binaries are located under folder: **/opt/pulsar-manager**.
+Part of the Ansible playbook (**pulsar_mgr_prom.yaml**) is responsible for installing and configuring a Pulsar manager on the specified host machine. The Pulsar manager binaries are installed under folder: **/opt/pulsar-manager**.
 
-If running successfully, the following Pulsar manager listens on the following port:
+If running successfully, the Pulsar manager listens on the following port:
 
 | Port | Ansible Variable | Description |
 | ---- | ---------------- | ----------- |
 | 7750 | pulsar_mgr_webui_port | Pulsar manager backend service listening port |
 
-**NOTE** for production deployment, there are more listening ports that can be configured with Pulsar manager; but it is beyond the scope of this document.
+**NOTE** for production deployment, there can be more listening ports configured for a Pulsar manager; but it is beyond the scope of this document.
 
 ## 4.1. Pulsar Manager Web UI
 
-One Pulsar manager is able to monitor multiple Pulsar instances. In Pulsar manager, one Pulsar instance is called an **Environment**. In order to access the Pulsar manager web UI, use the following URL:
+One Pulsar manager is able to monitor multiple Pulsar instances. For a Pulsar manager, one Pulsar instance is called an **Environment**. In order to access the Pulsar manager web UI, use the following URL:
 
 ```
 http://<pulsar_manager_host_ip>:7750/ui/index.html
@@ -302,9 +302,9 @@ When prompted to enter user name and password, enter **admin**/**admin**
 
 # 5. Prometheus and Grafana to Monitor the Pulsar Instance
 
-Another part of the Ansible playbook (**pulsar_mgr_prom.yaml**) is to launch docker containers, via docker-compose, on the specified host machine in order to view the metrics for the provisioned Pulsar instance. The Pulsar metrics binaries are located under folder: **/opt/pulsar-metrics**.
+Another part of the Ansible playbook (**pulsar_mgr_prom.yaml**) is to launch docker containers, via docker-compose, in order to display the metrics for the provisioned Pulsar instance. The Pulsar metrics binaries are installed under folder: **/opt/pulsar-metrics**.
 
-If running successfully, there are 3 launched containers with the following externally exposed ports:
+If running successfully, there are 3 running docker containers with the following externally exposed ports:
 
 | Container Name | Externally Exposed Port |
 | -------------- | ----------------------- |
@@ -328,7 +328,7 @@ The Ansible playbook will automatically configure the Prometheus server to pick 
 
 ### 5.1.2. Prometheus Web UI
 
-Once Prometheus server is successfully up and running, we can view the available metrics for all Pulsar instance server components from Prometheus Targets web page at the following URL (followed by an example screenshot)
+Once Prometheus server is up and running, we can view the available metrics for all Pulsar instance server components from Prometheus Targets web page at the following URL (followed by an example screenshot)
 
 ```
 http://<pulsar_metrics_host_ip>:9090/targets
