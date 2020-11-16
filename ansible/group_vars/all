@@ -63,8 +63,8 @@ share_zk: true
 zk_conf_file: "{{ tgt_pulsar_inst_dir }}/conf/zookeeper.conf"
 zk_data_dir: "{{ tgt_pulsar_inst_dir }}/data/zookeeper"
 
-4lw_enabled: true
-4lw_white_list: *
+4lw_enabled: false
+4lw_white_list: "*"
 
 zk_clnt_port: 2181
 zk_admin_srv_enable: true
