@@ -21,7 +21,7 @@
   - [5.2. Grafana Server](#52-grafana-server)
     - [5.2.1. Grafana WebUI and Data Source](#521-grafana-webui-and-data-source)
     - [5.2.2. Predefined Dashboard for the Pulsar Instance](#522-predefined-dashboard-for-the-pulsar-instance)
-- [6. Appendex A: Pulsar Connectors](#6-appendex-a-pulsar-connectors)
+- [6. Appendex A: Pulsar Connectors and Tiered Storage Offloaders](#6-appendex-a-pulsar-connectors-and-tiered-storage-offloaders)
 - [7. Appendix B: Pulsar-perf](#7-appendix-b-pulsar-perf)
 
 
@@ -285,7 +285,7 @@ All other data source configuration remains default.
 
 **=== TBD ===**
 
-# 6. Appendex A: Pulsar Connectors
+# 6. Appendex A: Pulsar Connectors and Tiered Storage Offloaders
 
 **=== TBD ===**
 
