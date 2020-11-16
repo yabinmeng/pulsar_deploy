@@ -74,26 +74,33 @@ Before running the Ansible playbooks, make sure to create a host inventory file,
 
 1. **pulsar_cluster_core**
 
-List all Pulsar instance host machines (for zookeepers, bookies, and brokers) under this group. Depending on the actual deployment, one host machine can be configured as being shared by different server components. The configuration of having what server components running on one  host machine is controlled by the associated Ansible variables after each host machine IP, as below:
+List all Pulsar instance host machines (for zookeepers, bookies, and brokers) under this group. Depending on the actual deployment, one host machine can be configured as being shared by different server components. The configuration of having what server components running on one  host machine is controlled by the associated Ansible variables after the IP address of each host machine, as below:
 
   * <pulsar_core_server1_ip> **zookeeper**=*[true|false]* **bookie**=*[true|false]* **broker**=*[true|false]*
 
+This group can be part of **pulsar_clnt** group.
+
 2. **pulsar_manager**
 
-List the IP of the host machine where Pulsar manager is going to run. One host machine is good enough in this group. This group needs to be part of **pulsar_clnt** group.
+List the IP address of the host machine where Pulsar manager is going to run. One host machine is good enough in this group. 
+
+This group needs to be part of **pulsar_clnt** group.
 
 3. **pulsar_perf**
 
-List the IPs of all host machines where we need to run Pulsar-perf utility (for performance testing purposes). This group needs to be part of **pulsar_clnt** group.
+List IP addresses of all host machines where we need to run Pulsar-perf utility (for performance testing purposes). 
+
+This group needs to be part of **pulsar_clnt** group.
 
 4. **pulsar_clnt**
 
-List the IPs of all host machines where Pulsar client libraries are needed. Any host machine that runs a Pulsar client application, including those bundled Pulsar command client tools like "pulsar-admin", "pulsar-client", "pulsar-perf", etc., that needs to connect the Pulsar instance falls under this group.
+List IP addresses of all host machines where Pulsar client libraries are needed. Any host machine that runs a Pulsar client application, including those bundled Pulsar command client tools like "pulsar-admin", "pulsar-client", "pulsar-perf", etc., that needs to connect the Pulsar instance falls under this group.
 
 5. **pulsar_metrics**
 
-List the IP of the host machine where Prometheus and Grafana servers are going to run. The Pulsar instance server metrics (zookeepers, bookies, and brokers) can be displayed and viewed from Prometheus and Grafana web UIs. One host machine is good enough in this group.
+List the IP address of the host machine where Prometheus and Grafana servers are runniing. The Pulsar instance server metrics (zookeepers, bookies, and brokers) will be displayed and viewed from Prometheus and Grafana web UIs.
 
+This group doesn't need to be part of **pulsar_clnt** group.
 
 ##  2.3. Ansible Playbooks
 
