@@ -6,9 +6,13 @@
 [pulsar_manager]
 <pulsar_mananger_host_ip>
 
-[pulsar_metrics]
-<pulsar_metrics_host_ip>
+[pulsar_perf]
+<pulsar_perf_host_ip>
 
 [pulsar_clnt:children]
 pulsar_cluster_core
 pulsar_manager
+pulsar_perf
+
+[pulsar_metrics]
+<pulsar_metrics_host_ip>

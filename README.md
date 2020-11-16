@@ -175,8 +175,6 @@ Mode: follower
 Node count: 105
 ```
 
-**NOTE**
-
 ### 3.2.2. Zookeeper AdminServer
 
 For Zookeeper version 3.5.0+, it includes an embedded Jetty server that provides a simple HTTP interface to Zookeeper's 4lw commands. For Pulsar 2.6.1 (as tested using this repo.), the corresponding Zookeeper version is 3.5.7 and therefore Zookeeper AdminServer is available and enabled by default at port 9990. In order to access Zookeeper AdminServer WebUI, access the following address:
@@ -378,7 +376,7 @@ tierstorage_offloader: true
 
 By default, Pulsar perf uses "**client.conf**" as the default configuration file. Therefore, in this repo, we can run Pulsar-perf against the provisioned Pulsar instance on any host machines under group **pulsar_clnt** (hosts.ini). This includes the host machine where we install Pulsar manager and all host machines within the Pulsar instance. 
 
-If a dedicated performance testing machine is preferred to run Pulsar-perf, we can create a seperate group (e.g. **pulsar_perf**) in the host inventory file and make sure to make it as a child of **pulsar_clnt** group, something like below:
+If a dedicated performance testing machine is preferred to run Pulsar-perf, we can use a dedicate Ansible group (e.g. **pulsar_perf**) in the host inventory file and make sure to make it as a child of **pulsar_clnt** group, something like below (as in this Ansible framework)
 
 ```
 ... ...
@@ -390,4 +388,6 @@ If a dedicated performance testing machine is preferred to run Pulsar-perf, we c
 pulsar_cluster_core
 pulsar_manager
 pulsar_perf
+
+... ...
 ```
