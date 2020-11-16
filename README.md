@@ -170,8 +170,8 @@ The overall Pulsar instance deployment sequence using this framework is as below
 In this playbook, the [Zookeeper "four-letter-words (4lw)" command](https://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_zkCommands) can be enabled via the following Ansible variables. By default, when enabled, all Zookeeper 4lw commands are allowed. If only specific commands are needed, please change the white list setting accordingly (individual commands separated by comma, e.g. ruok, stat)
 
 ```
-4lw_enabled: true
-4lw_white_list: *
+enable_4lw_cmd: true
+zk_cmd_white_list: "*"
 ```
 
 From any server host machine where Zookeeper is running, we can run these 4lw commands on the command line to get the Zookeeper server information. An example is as below:
