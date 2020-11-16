@@ -1,4 +1,22 @@
-# Overview
+- [1. Overview](#1-overview)
+    - [1.0.1. Current Limitation](#101-current-limitation)
+- [2. Usage Description](#2-usage-description)
+  - [2.1. Testing Environment](#21-testing-environment)
+  - [2.2. Host Inventory File Structure](#22-host-inventory-file-structure)
+  - [2.3. Ansible Playbooks](#23-ansible-playbooks)
+- [3. Pulsar Instance](#3-pulsar-instance)
+  - [3.1. View Zookeeper Commands, Zookeeper AdminServer, and Zookeeper Shell](#31-view-zookeeper-commands-zookeeper-adminserver-and-zookeeper-shell)
+    - [3.1.1. Zookkeeper commands](#311-zookkeeper-commands)
+    - [3.1.2. Zookeeper AdminServer](#312-zookeeper-adminserver)
+    - [3.1.3. Zookkeeper Shell](#313-zookkeeper-shell)
+- [4. Pulsar Manager](#4-pulsar-manager)
+  - [4.1. Bookkeeper Visual Manager](#41-bookkeeper-visual-manager)
+- [5. Deploy Prometheus and Grafana to Monitor the Pulsar Instance](#5-deploy-prometheus-and-grafana-to-monitor-the-pulsar-instance)
+  - [5.1. Prometheus Scraping Endpoints for the Pulsar Instance](#51-prometheus-scraping-endpoints-for-the-pulsar-instance)
+  - [5.2. Predefined Grafana Dashboard for the Pulsar Instance](#52-predefined-grafana-dashboard-for-the-pulsar-instance)
+
+
+# 1. Overview
 
 Apache Pulsar is a distributed messaging and streaming platform. The diagram below shows a typical single-cluster deployment structure for a **Pulsar Instance**. A Pulsar instance can also be deployed having multiple Pulsar clusters that are replicated with each other (aka, geo-replication).
 
@@ -13,7 +31,7 @@ The Ansible framework aims to automate the provisioning of a Pulsar instance of 
 * A docker-compose based Prometheus server to scrape metrics from the Pulsar Instance
 * A docker-compose based Grafana server to view Pulsar Instance metrics dashboards
 
-###  Current Limitation
+###  1.0.1. Current Limitation
 
 At the omoment, there are several limitations of the Ansible framework in this repo.:
 
@@ -22,9 +40,9 @@ At the omoment, there are several limitations of the Ansible framework in this r
 
 These Ansible framework in this repo. will be improved in the future to lift these limitations.
 
-# Usage Description
+# 2. Usage Description
 
-## Testing Environment
+## 2.1. Testing Environment
 
 The Ansible framework has beene tested in an enviornment with the following specification:
 
@@ -37,7 +55,7 @@ ansible-galaxy collection install community.general
   **NOTE**: If the remote host has a different OS (e.g. CentOS), the framework needs to be tweaked to reflect OS difference (e.g. apt vs yum)
 * Apache Pulsar version: ***2.6.1*** (configurable)
 
-## Host Inventory File Structure
+## 2.2. Host Inventory File Structure
 
 Before running the Ansible playbooks, make sure to create a host inventory file, **hosts.ini**, by copying from the provided template file, **hosts.ini.template**. In the host inventory file, there are 4 groups:
 
@@ -59,7 +77,7 @@ List the IP of the host machine where Prometheus and Grafana servers are going t
 
 List all host machines where Pulsar client libraries are needed. Any host machine that runs a Pulsar client application, including those bundled Pulsar command client tools like "pulsar-admin", "pulsar-client", "pulsar-perf", etc., that needs to connect the Pulsar instance falls under this group.
 
-##  Ansible Playbooks
+##  2.3. Ansible Playbooks
 
 There are 3 Ansible playbooks in this repo., their description is as below:
 
@@ -79,7 +97,7 @@ The execution of "shutdown_cluster.yaml" can also take an extra variable which c
 ansible-playbook -i hosts.ini shutdown_cluster.yaml --extra-vars "del_inst=[true|false]" --private-key=<private_ssh_key> -u <ssh_user>
 ```
 
-# Pulsar Instance
+# 3. Pulsar Instance
 
 After successfully executing the Ansible playbook (**pulsar_cluster.yaml**), a Pulsar instance is up and running. On each host machien where one Pulsar instance component server (zookeeper/bookie/broker) is running, 
 
@@ -109,9 +127,9 @@ The main configuration files for the various Pulsar instance compoents are under
 * broker.conf
 * client.conf
 
-## View Zookeeper Commands, Zookeeper AdminServer, and Zookeeper Shell
+## 3.1. View Zookeeper Commands, Zookeeper AdminServer, and Zookeeper Shell
 
-### Zookkeeper commands
+### 3.1.1. Zookkeeper commands
 
 In this playbook, all [Zookeeper "four-letter-words (4lw)" commands](https://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_zkCommands) and  white list is enabled through the following configuration:
 ```
@@ -132,7 +150,7 @@ Mode: follower
 Node count: 105
 ```
 
-### Zookeeper AdminServer
+### 3.1.2. Zookeeper AdminServer
 
 For Zookeeper version 3.5.0+, it includes an embedded Jetty server that provides a simple HTTP interface to Zookeeper's 4lw commands. For Pulsar 2.6.1 (as tested using this repo.), the corresponding Zookeeper version is 3.5.7 and therefore Zookeeper AdminServer is available and enabled by default at port 9990. In order to access Zookeeper AdminServer WebUI, access the following address:
 
@@ -140,7 +158,7 @@ For Zookeeper version 3.5.0+, it includes an embedded Jetty server that provides
 http://<zookeeper_node_ip>:9990/commands
 ```
 
-### Zookkeeper Shell
+### 3.1.3. Zookkeeper Shell
 
 We can also launch a Zookkeeper shell to check or set the Pulsar instance related metadata that is stored in the zookeeper. 
 
@@ -157,11 +175,13 @@ WatchedEvent state:SyncConnected type:None path:null
 
 For Zookeeper shell commands, please refer to Zookeeper document [here](https://zookeeper.apache.org/doc/r3.6.0/zookeeperCLI.html)
 
-# Pulsar Manager 
+# 4. Pulsar Manager 
 
 Pulsar manager is a web-based utility tool to help managing and monitor a Pulsar instance, such  as enants, namespaces, topics, subscriptions, brokers, clusters, and so on. [Pulsar manager](https://pulsar.apache.org/docs/en/administration-pulsar-manager/) replaces the old, depercated Pulsar Dashboard. Pulsar manager is not part of standar Pulsar package. It can be downloaded from [here](https://github.com/apache/pulsar-manager). 
 
-Part of the Ansible playbook (**pulsar_mgr_prom.yaml**) is responsible for installing and configuring a Pulsar manager on the specified host machine. The corresponding listening ports related with Pulsar Manager are listed below:
+Part of the Ansible playbook (**pulsar_mgr_prom.yaml**) is responsible for installing and configuring a Pulsar manager on the specified host machine. The Pulsar manager binaries are located under folder: **/opt/pulsar-manager**.
+
+If running successfully, the following Pulsar manager listens on the following port:
 
 | Port | Ansible Variable | Description |
 | ---- | ---------------- | ----------- |
@@ -179,4 +199,40 @@ When prompted to enter user name and password, enter **pulsar**/**pulsar**. This
 
 <img src="https://github.com/yabinmeng/pulsar_deploy/blob/master/resources/Pulsar.Manager.Topics.jpg" width=800>
 
-# Deploy Prometheus and Grafana to Monitor the Pulsar Instance
+## 4.1. Bookkeeper Visual Manager
+
+Pulsar Manager also has a Web UI as **Bookkeeper Visual Manager**. You can access it from the following URL:
+
+```
+http://<pulsar_manager_host_ip>:7750/bkvm
+```
+
+When prompted to enter user name and password, enter **admin**/**admin**
+
+# 5. Deploy Prometheus and Grafana to Monitor the Pulsar Instance
+
+Another part of the Ansible playbook (**pulsar_mgr_prom.yaml**) is to lauch docker containers, via docker-compose, on the specified host machine in order to view the metrics for the provisioned Pulsar instance. The Pulsar metrics binaries are located under folder: **/opt/pulsar-metrics**.
+
+If running successfully, there are 3 launched containers with the following externally exposed ports:
+
+| Container Name | Externally Exposed Port |
+| -------------- | ----------------------- |
+| prometheus | 9090 |
+| grafana | 3000 |
+| graphite-exporter | 9108 (TCP)<br>9109 (UDP) |
+
+## 5.1. Prometheus Scraping Endpoints for the Pulsar Instance
+
+Within a Pulsar instance, all server components (zookeepers, bookies, and brokers) expose their metrics in Prometheus format. Their corresponding Prometheus scraping HTTP endpoints are listed as below:
+
+| Server Component | Prometheus Scraping Endpoints |
+| ---------------- | ----------------------------- |
+| zookkeeper | <zookeeper_node_ip>:8000/metrics (If zookeeper and bookie are not are the same host machine)<br><zookeeper_node_ip>:8010/metrics (If zookeeper and bookie does share the same host machine) |
+| bookie | <bookie_node_ip>:8000/metrics |
+| broker | <broker_node_ip>:8080/metrics |
+
+The Ansible playbook will automatically configure the Prometheus server to pick up the scraping endpoints for all server components within a Pulsar instance.
+
+## 5.2. Predefined Grafana Dashboard for the Pulsar Instance
+
+**<<TBD>>**
