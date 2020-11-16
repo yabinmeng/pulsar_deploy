@@ -14,7 +14,7 @@
   lineinfile:
     path: "{{ zk_conf_file }}"
     line: 4lw.commands.whitelist={{ 4lw_white_list }}
-  when: 4lw_enabled|bool
+  when: enable_4lw_cmd|bool
 
 - name: Modify zookeeper config fiile to add zookeeper node list
   lineinfile:
