@@ -80,15 +80,20 @@ List all Pulsar instance host machines (for zookeepers, bookies, and brokers) un
 
 2. **pulsar_manager**
 
-List the IP of the host machine where Pulsar manager is going to run. One host machine is good enough in this group.
+List the IP of the host machine where Pulsar manager is going to run. One host machine is good enough in this group. This group needs to be part of **pulsar_clnt** group.
 
-3. **pulsar_metrics**
+3. **pulsar_perf**
 
-List the IP of the host machine where Prometheus and Grafana servers are going to run. The Pulsar instance server metrics (zookeepers, bookies, and brokers) can be displayed and viewed from Prometheus and Grafana web UIs. One host machine is good enough in this group.
+List the IPs of all host machines where we need to run Pulsar-perf utility (for performance testing purposes). This group needs to be part of **pulsar_clnt** group.
 
 4. **pulsar_clnt**
 
-List all host machines where Pulsar client libraries are needed. Any host machine that runs a Pulsar client application, including those bundled Pulsar command client tools like "pulsar-admin", "pulsar-client", "pulsar-perf", etc., that needs to connect the Pulsar instance falls under this group.
+List the IPs of all host machines where Pulsar client libraries are needed. Any host machine that runs a Pulsar client application, including those bundled Pulsar command client tools like "pulsar-admin", "pulsar-client", "pulsar-perf", etc., that needs to connect the Pulsar instance falls under this group.
+
+5. **pulsar_metrics**
+
+List the IP of the host machine where Prometheus and Grafana servers are going to run. The Pulsar instance server metrics (zookeepers, bookies, and brokers) can be displayed and viewed from Prometheus and Grafana web UIs. One host machine is good enough in this group.
+
 
 ##  2.3. Ansible Playbooks
 
