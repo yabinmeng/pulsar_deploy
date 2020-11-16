@@ -11,6 +11,7 @@
     - [3.2.2. Zookeeper AdminServer](#322-zookeeper-adminserver)
     - [3.2.3. Zookeeper Shell](#323-zookeeper-shell)
   - [3.3. Bookies](#33-bookies)
+    - [3.3.1. Bookkeeper Shell Commands](#331-bookkeeper-shell-commands)
   - [3.4. Brokers](#34-brokers)
 - [4. Pulsar Manager](#4-pulsar-manager)
   - [4.1. Pulsar Manager Web UI](#41-pulsar-manager-web-ui)
@@ -208,6 +209,8 @@ After each bookie server is up and running (e.g., port 3181 is in listening stat
 $ bookkeeper shell bookiesanity
 ```
 
+### 3.3.1. Bookkeeper Shell Commands
+
 There are many other bookkeeper shell commands that can be used to view and manage the bookies. For example, we can use the following command to get the free space of each bookie:
 
 ```
@@ -221,6 +224,8 @@ Total free disk space in the cluster:	106588422144(106.588GB)
 Total disk capacity in the cluster:	120581099520(120.581GB)
 ... ... 
 ```
+
+**NOTE**: for a full list of bookkeeper shell commands, please refer to Bookkeeper document [here](https://bookkeeper.apache.org/docs/4.5.1/reference/cli/#the-bookkeeper-shell)
 
 ## 3.4. Brokers
 
