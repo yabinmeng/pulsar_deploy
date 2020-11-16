@@ -21,6 +21,8 @@
   - [5.2. Grafana Server](#52-grafana-server)
     - [5.2.1. Grafana WebUI](#521-grafana-webui)
     - [5.2.2. Predefined Dashboard for the Pulsar Instance](#522-predefined-dashboard-for-the-pulsar-instance)
+- [6. Appendex A: Pulsar Connectors](#6-appendex-a-pulsar-connectors)
+- [7. Appendix B: Pulsar-perf](#7-appendix-b-pulsar-perf)
 
 
 # 1. Overview
@@ -258,4 +260,6 @@ The Ansible playbook will automatically configure the Prometheus server to pick 
 
 ### 5.2.2. Predefined Dashboard for the Pulsar Instance
 
-**=== TBD ===**
+# 6. Appendex A: Pulsar Connectors
+
+# 7. Appendix B: Pulsar-perf
