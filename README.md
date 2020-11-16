@@ -175,6 +175,8 @@ One Pulsar manager is able to monitor multiple Pulsar instance. In Pulsar manage
 http://<pulsar_manager_host_ip>:7750/ui/index.html
 ```
 
-When prompted to enter user name and password, enter **pulsar**/**pulsar**. This adminstrative username and passowrd is created as part of running this playbook. Once logged in, Click "+ New Environment" button to add a Pulsar instance to manage.
+When prompted to enter user name and password, enter **pulsar**/**pulsar**. This adminstrative username and passowrd is created as part of running this playbook. Once logged in, Click "+ New Environment" button to add a Pulsar instance to manage. An example UI is as below (the managed Pulsar instance name is "mypulsar_instance")
+
+<img src="https://github.com/yabinmeng/pulsar_deploy/blob/master/resources/Pulsar.Manager.Topics.jpg" width=800>
 
 # Deploy Prometheus and Grafana to Monitor the Pulsar Instance
