@@ -241,9 +241,9 @@ Total disk capacity in the cluster:	120581099520(120.581GB)
 
 ## 3.4. Brokers
 
-After each broker server is up and running (e.g., ports 6550/6551/8080/8443 are in listening state), we can test writing(producing)/reading(consuming) messages to/from any broker using the included **pulsar-client** utility. 
+After each broker server is up and running (e.g., ports 6550/6551/8080/8443 are in listening state), we can test writing(producing)/reading(consuming) messages to/from the broker using the included **pulsar-client** utility. 
 
-In order to run any Pulsar client application, including **pulsar-client** utility, it needs to be configured first in order to make sure the proper web service and broker service URL are known to the client. The client configuration file is **client.conf** file and the playbook updates it properly on any host machines under Ansible **pulsar_clnt** group.
+In order to run any Pulsar client application, including **pulsar-client** utility, it needs to be first configured in order to make sure the proper web service and broker service URLs are known to the client. The client configuration file is **client.conf** and the playbook does update this configuration file on any host machine listed under under Ansible **pulsar_clnt** group.
 
 The following command can be used to test producing a message to a broker:
 
@@ -266,7 +266,7 @@ $ sudo -u pulsar pulsar-client consume \
 
 # 4. Pulsar Manager 
 
-Pulsar manager is a web-based utility tool to help manage and monitor a Pulsar instance, such  as tenants, namespaces, topics, subscriptions, brokers, clusters, and so on. [Pulsar manager](https://pulsar.apache.org/docs/en/administration-pulsar-manager/) replaces the old, deprecated Pulsar Dashboard. Pulsar manager is not part of standar Pulsar package and needs to be downloaded and installed separately ([GitHub Repo](https://github.com/apache/pulsar-manager)). 
+Pulsar manager is a web-based utility to help manage and monitor contents within a Pulsar instance, such as tenants, namespaces, topics, subscriptions, brokers, clusters, and so on. [Pulsar manager](https://pulsar.apache.org/docs/en/administration-pulsar-manager/) replaces the old, deprecated *Pulsar Dashboard*. It is not part of standar Pulsar package and needs to be downloaded and installed separately ([GitHub Repo](https://github.com/apache/pulsar-manager)). 
 
 Part of the Ansible playbook (**pulsar_mgr_prom.yaml**) is responsible for installing and configuring a Pulsar manager on the specified host machine. The Pulsar manager binaries are installed under folder: **/opt/pulsar-manager**.
 
