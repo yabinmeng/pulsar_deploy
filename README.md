@@ -19,7 +19,7 @@
     - [5.1.1. Prometheus Scraping Endpoints for the Pulsar Instance](#511-prometheus-scraping-endpoints-for-the-pulsar-instance)
     - [5.1.2. Prometheus Web UI](#512-prometheus-web-ui)
   - [5.2. Grafana Server](#52-grafana-server)
-    - [5.2.1. Grafana WebUI](#521-grafana-webui)
+    - [5.2.1. Grafana WebUI and Data Source](#521-grafana-webui-and-data-source)
     - [5.2.2. Predefined Dashboard for the Pulsar Instance](#522-predefined-dashboard-for-the-pulsar-instance)
 - [6. Appendex A: Pulsar Connectors](#6-appendex-a-pulsar-connectors)
 - [7. Appendix B: Pulsar-perf](#7-appendix-b-pulsar-perf)
@@ -186,7 +186,11 @@ For Zookeeper shell commands, please refer to Zookeeper document [here](https://
 
 ## 3.2. Bookies
 
+**=== TBD ===**
+
 ## 3.3. Brokers
+
+**=== TBD ===**
 
 # 4. Pulsar Manager 
 
@@ -262,10 +266,29 @@ http://<pulsar_metrics_host_ip>:9090/targets
 
 ## 5.2. Grafana Server
 
-### 5.2.1. Grafana WebUI
+### 5.2.1. Grafana WebUI and Data Source
+
+The Grafana dashboard web UI can be accessed from the following URL:
+
+```
+http://<pulsar_metrics_host_ip>:3000
+```
+
+Once prompted for username and password, enter **admin/admin**. Since all metrics for the Pulsar instance are scaped into the Prometheus server that resides on the same host machine, the playbook defines one and the only one Grafana data source with the following info:
+
+* Name: **prometheus**
+* HTTP URL: **http://prometheus:9090**
+
+All other data source configuration remains default.
 
 ### 5.2.2. Predefined Dashboard for the Pulsar Instance
 
+**=== TBD ===**
+
 # 6. Appendex A: Pulsar Connectors
 
+**=== TBD ===**
+
 # 7. Appendix B: Pulsar-perf
+
+**=== TBD ===**
