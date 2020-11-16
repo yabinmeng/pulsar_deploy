@@ -155,7 +155,7 @@ The overall Pulsar instance deployment sequence using this framework is as below
 
 ### 3.2.1. Zookeeper commands
 
-In this playbook, the [Zookeeper "four-letter-words (4lw)" command](https://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_zkCommands) can be enabled via the following Ansible variables. By default, when enabled, all Zookeeper 4lw commands are enabled. If only specific commands are allowed, please change the white list setting accordingly (individual commands separated by comma, e.g. ruok, stat)
+In this playbook, the [Zookeeper "four-letter-words (4lw)" command](https://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_zkCommands) can be enabled via the following Ansible variables. By default, when enabled, all Zookeeper 4lw commands are allowed. If only specific commands are needed, please change the white list setting accordingly (individual commands separated by comma, e.g. ruok, stat)
 
 ```
 4lw_enabled: true
