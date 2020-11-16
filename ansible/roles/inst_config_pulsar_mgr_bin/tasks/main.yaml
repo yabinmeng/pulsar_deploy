@@ -52,3 +52,11 @@
     path: "{{ tgt_pulsar_mgr_inst_dir }}/bkvm.conf"
     regexp: "^bkvm.enabled="
     line: "bkvm.enabled=true"
+
+- name: Modify "application.properties" file to reflect Pulsar manager listening port
+  lineinfile:
+    path: "{{ tgt_pulsar_mgr_inst_dir }}/application.properties"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: '^server.port=', line: 'server.port={{ pulsar_mgr_webui_port }}' }
