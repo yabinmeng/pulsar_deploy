@@ -1,0 +1,10 @@
+[
+  {
+    "targets": [ 
+      <BOOKIE_NODE_IP_PORT_ARRAY>
+    ],
+    "labels": { 
+      "cluster": "<PULSAR_CLUSTER>" 
+    }
+  }
+]

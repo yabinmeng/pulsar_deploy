@@ -10,17 +10,17 @@
     src: "../docker/prom_grafana/"
     dest: "{{ tgt_metrics_compose_homedir }}"
 
-- name: Generate "prometheus.yaml" file from the template
-  copy:
-    src: "{{ tgt_metrics_compose_homedir }}/prometheus/prometheus.yaml.template"
-    remote_src: true
-    dest: "{{ tgt_metrics_compose_homedir }}/prometheus/prometheus.yaml"
+# - name: Generate "prometheus.yaml" file from the template
+#   copy:
+#     src: "{{ tgt_metrics_compose_homedir }}/prometheus/prometheus.yaml.template"
+#     remote_src: true
+#     dest: "{{ tgt_metrics_compose_homedir }}/prometheus/prometheus.yaml"
     
-- name: Generate Prometheus target scrape json files from the template (borker, bookie, and zookeeper)
-  copy:
-    src: "{{ tgt_metrics_compose_homedir }}/prometheus/pulsar_scrape.json.template"
-    remote_src: true
-    dest: "{{ tgt_metrics_compose_homedir }}/prometheus/tg_pulsar.json"
+# - name: Generate Prometheus target scrape json files from the template (borker, bookie, and zookeeper)
+#   copy:
+#     src: "{{ tgt_metrics_compose_homedir }}/prometheus/pulsar_scrape.json.template"
+#     remote_src: true
+#     dest: "{{ tgt_metrics_compose_homedir }}/prometheus/tg_pulsar.json"
 
 - name: Replace template string for Pulsar cluster name in "prometheus.yaml" file
   replace:
@@ -28,8 +28,10 @@
     regexp: "{{ pulsar_cluster_name_template_tag }}"
     replace: "{{ pulsar_cluster_name }}"
   with_items:
-    - "prometheus.yaml"
-    - "tg_pulsar.json"
+    - "tg_pulsar_zookeeper.json"
+    - "tg_pulsar_bookkeeper.json"
+    - "tg_pulsar_broker.json"
+
 
 - template: src={{ item }}_metrics_list.j2 dest=/tmp/{{ item }}_scrape_list mode=0664
   with_items:
@@ -41,7 +43,7 @@
   register: "broker_scrape_list_cmdcat"
 - name: Replace template string in scrape target node list file for brokers
   replace:
-    path: "{{ tgt_metrics_compose_homedir }}/prometheus/tg_pulsar.json"
+    path: "{{ tgt_metrics_compose_homedir }}/prometheus/tg_pulsar_broker.json"
     regexp: "{{ pulsar_broker_scape_target_template_tag }}"
     replace: "{{ broker_scrape_list_cmdcat.stdout | to_json | regex_replace(', ', '\", \"') }}"
 
@@ -49,7 +51,7 @@
   register: "bookie_scrape_list_cmdcat"
 - name: Replace template string in scrape target node list file for bookies
   replace:
-    path: "{{ tgt_metrics_compose_homedir }}/prometheus/tg_pulsar.json"
+    path: "{{ tgt_metrics_compose_homedir }}/prometheus/tg_pulsar_bookkeeper.json"
     regexp: "{{ pulsar_bookie_scape_target_template_tag }}"
     replace: "{{ bookie_scrape_list_cmdcat.stdout | to_json | regex_replace(', ', '\", \"') }}"
 
@@ -57,6 +59,6 @@
   register: "zookeeper_scrape_list_cmdcat"    
 - name: Replace template string in scrape target node list file for zookeepers
   replace:
-    path: "{{ tgt_metrics_compose_homedir }}/prometheus/tg_pulsar.json"
+    path: "{{ tgt_metrics_compose_homedir }}/prometheus/tg_pulsar_zookeeper.json"
     regexp: "{{ pulsar_zookeeper_scape_target_template_tag }}"
     replace: "{{ zookeeper_scrape_list_cmdcat.stdout | to_json | regex_replace(', ', '\", \"') }}"

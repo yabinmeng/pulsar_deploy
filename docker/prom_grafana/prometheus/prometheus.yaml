@@ -13,10 +13,26 @@ scrape_configs:
     - targets:
       - localhost:9090
 
-  - job_name: <PULSAR_CLUSTER>
+  - job_name: zookeeper
     # Override the global default and scrape targets from this job every 5 seconds.
     scrape_interval: 5s
     honor_labels: true
     file_sd_configs:
       - files:
-        - './tg_pulsar.json'
+        - './tg_pulsar_zookeeper.json'
+
+  - job_name: bookkeeper
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+    honor_labels: true
+    file_sd_configs:
+      - files:
+        - './tg_pulsar_bookkeeper.json'
+
+  - job_name: broker
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+    honor_labels: true
+    file_sd_configs:
+      - files:
+        - './tg_pulsar_broker.json'

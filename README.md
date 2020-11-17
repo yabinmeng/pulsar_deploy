@@ -348,7 +348,8 @@ http://<pulsar_metrics_host_ip>:3000
 
 Once prompted for username and password, enter **admin/admin**. Since all metrics for the Pulsar instance are scraped into the Prometheus server that resides on the same host machine, the playbook defines one and the only one Grafana data source with the following info:
 
-* Name: **prometheus**
+* Name: **Prometheus**
+* Type: prometheus
 * HTTP URL: **http://prometheus:9090**
 
 All other data source configuration remains default.
