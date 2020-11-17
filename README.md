@@ -356,7 +356,10 @@ All other data source configuration remains default.
 
 ### 5.2.2. Predefined Dashboard for the Pulsar Instance
 
-**=== TBD ===**
+The Ansible framework also sets up a set of Grafana dashboards for the managed Pulsar instance metrics. Below is an example of the Pulsar Overview dasboard.
+
+<img src="https://github.com/yabinmeng/pulsar_deploy/blob/master/resources/Pulsar.Dashbord.Overview.jpg" width=800>
+
 
 # 6. Appendix A: Pulsar Connectors and Tiered Storage Offloaders
 
