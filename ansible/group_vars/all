@@ -140,6 +140,8 @@ pulsar_mgr_webui_port: 7750
 #  Prometheus and Grafana docker container settings
 # -------------------------------------------
 #
+graphite_exporter_scrape_port: 9108
+
 url_docker_debian_pkg: https://download.docker.com/linux/ubuntu
 
 tgt_metrics_compose_homedir: /opt/pulsar-metrics
@@ -148,3 +150,4 @@ pulsar_cluster_name_template_tag: <PULSAR_CLUSTER>
 pulsar_broker_scape_target_template_tag: <BROKER_NODE_IP_PORT_ARRAY>
 pulsar_bookie_scape_target_template_tag: <BOOKIE_NODE_IP_PORT_ARRAY>
 pulsar_zookeeper_scape_target_template_tag: <ZOOKEEPER_NODE_IP_PORT_ARRAY>
+graphite_scape_target_template_tag: <GRAPHITE_NODE_IP_PORT_ARRAY>

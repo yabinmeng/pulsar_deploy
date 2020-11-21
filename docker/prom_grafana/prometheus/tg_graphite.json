@@ -1,7 +1,7 @@
 [
   {
     "targets": [ 
-      <METRICS_SRV_IP>:9108
+      <GRAPHITE_NODE_IP_PORT_ARRAY>
     ],
     "labels": { 
     }

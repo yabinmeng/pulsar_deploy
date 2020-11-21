@@ -12,7 +12,8 @@ scrape_configs:
     - targets:
       - localhost:9090
 
-  - job_name: 'graphite'
+  - job_name: graphite
+    scrape_interval: 5s
     honor_labels: true
     file_sd_configs:
       - files:
