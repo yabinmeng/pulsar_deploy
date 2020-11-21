@@ -10,7 +10,7 @@
     - { role: pulsar_mgr_admin_user }
 
 - hosts: pulsar_metrics
-  gather_facts: false
+  gather_facts: true
   any_errors_fatal: true
   become: true
   become_method: sudo

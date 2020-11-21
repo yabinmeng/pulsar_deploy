@@ -1,0 +1,9 @@
+[
+  {
+    "targets": [ 
+      <METRICS_SRV_IP>:9108
+    ],
+    "labels": { 
+    }
+  }
+]

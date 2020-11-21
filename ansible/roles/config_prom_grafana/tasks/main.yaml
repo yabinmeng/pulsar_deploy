@@ -10,18 +10,6 @@
     src: "../docker/prom_grafana/"
     dest: "{{ tgt_metrics_compose_homedir }}"
 
-# - name: Generate "prometheus.yaml" file from the template
-#   copy:
-#     src: "{{ tgt_metrics_compose_homedir }}/prometheus/prometheus.yaml.template"
-#     remote_src: true
-#     dest: "{{ tgt_metrics_compose_homedir }}/prometheus/prometheus.yaml"
-    
-# - name: Generate Prometheus target scrape json files from the template (borker, bookie, and zookeeper)
-#   copy:
-#     src: "{{ tgt_metrics_compose_homedir }}/prometheus/pulsar_scrape.json.template"
-#     remote_src: true
-#     dest: "{{ tgt_metrics_compose_homedir }}/prometheus/tg_pulsar.json"
-
 - name: Replace template string for Pulsar cluster name in "prometheus.yaml" file
   replace:
     path: "{{ tgt_metrics_compose_homedir }}/prometheus/{{ item }}"
@@ -39,9 +27,16 @@
     - bookie
     - zookeeper
 
+- name: Replace template string in scrape target node list file for Graphite
+  replace:
+    path: "{{ tgt_metrics_compose_homedir }}/prometheus/tg_graphite.json"
+    regexp: "<METRICS_SRV_IP>"
+    #replace: "{{ inventory_hostname }}"
+    replace: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+
 - shell: cat /tmp/broker_scrape_list
   register: "broker_scrape_list_cmdcat"
-- name: Replace template string in scrape target node list file for brokers
+- name: Replace template string in scrape target node list file for Pulsar brokers
   replace:
     path: "{{ tgt_metrics_compose_homedir }}/prometheus/tg_pulsar_broker.json"
     regexp: "{{ pulsar_broker_scape_target_template_tag }}"
@@ -49,7 +44,7 @@
 
 - shell: cat /tmp/bookie_scrape_list
   register: "bookie_scrape_list_cmdcat"
-- name: Replace template string in scrape target node list file for bookies
+- name: Replace template string in scrape target node list file for Pulsar bookies
   replace:
     path: "{{ tgt_metrics_compose_homedir }}/prometheus/tg_pulsar_bookkeeper.json"
     regexp: "{{ pulsar_bookie_scape_target_template_tag }}"
@@ -57,7 +52,7 @@
 
 - shell: cat /tmp/zookeeper_scrape_list
   register: "zookeeper_scrape_list_cmdcat"    
-- name: Replace template string in scrape target node list file for zookeepers
+- name: Replace template string in scrape target node list file for Pulsar zookeepers
   replace:
     path: "{{ tgt_metrics_compose_homedir }}/prometheus/tg_pulsar_zookeeper.json"
     regexp: "{{ pulsar_zookeeper_scape_target_template_tag }}"

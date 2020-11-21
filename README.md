@@ -360,7 +360,6 @@ The Ansible framework also sets up a set of Grafana dashboards for the managed P
 
 <img src="https://github.com/yabinmeng/pulsar_deploy/blob/master/resources/Pulsar.Dashbord.Overview.jpg" width=800>
 
-
 # 6. Appendix A: Pulsar Connectors and Tiered Storage Offloaders
 
 This Ansible framework provides support for Pulsar connectors through the following Ansible variables. Currently for testing purposes, 2 source connectors (file and netty) and 1 sink connector (Cassandra) are enabled. If more connectors, please add them accordingly in the list. 

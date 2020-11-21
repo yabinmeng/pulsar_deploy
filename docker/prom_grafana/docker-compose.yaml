@@ -9,7 +9,9 @@ services:
     container_name: graphite-exporter
     image: "prom/graphite-exporter"
     ports:
+      - "9108:9108"
       - "9109:9109"
+      - "9109:9109/udp"
     
   prometheus:
     container_name: prometheus

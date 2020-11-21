@@ -10,15 +10,6 @@
     - { role: stop_svc_zookeeper, when: zookeeper|bool, serial: 1 }
 
 
-- hosts: pulsar_manager
-  gather_facts: false
-  any_errors_fatal: true
-  become: true
-  become_method: sudo
-  roles:
-    - { role: stop_svc_pulsar_mgr }
-
-
 - hosts: pulsar_clnt
   gather_facts: false
   any_errors_fatal: true
@@ -28,22 +19,6 @@
   - name: Delete installation directory if requested
     file:
       path: "{{ tgt_pulsar_inst_dir }}"
-      state: absent
-    when:
-      del_inst is defined and del_inst|bool
-
-
-- hosts: pulsar_metrics
-  gather_facts: false
-  any_errors_fatal: true
-  become: true
-  become_method: sudo
-  roles:
-    - { role: stop_svc_prom_graf }
-  tasks:
-  - name: Delete pulsar metrics docker compose folder if requested
-    file:
-      path: "{{ tgt_metrics_compose_homedir }}"
       state: absent
     when:
       del_inst is defined and del_inst|bool
