@@ -1,0 +1,10 @@
+---
+- hosts: pulsar_cluster_core
+  gather_facts: true
+  any_errors_fatal: true
+  become: true
+  become_method: sudo
+  roles:
+    - { role: start_svc_zookeeper, when: zookeeper|bool, serial: 1 }
+    - { role: start_svc_bookie, when: bookie|bool, serial: 1 }
+    - { role: start_svc_broker, when: broker|bool, serial: 1 }

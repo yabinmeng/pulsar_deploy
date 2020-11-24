@@ -1,0 +1,16 @@
+---
+- hosts: pulsar_manager
+  gather_facts: false
+  any_errors_fatal: true
+  become: true
+  become_method: sudo
+  roles:
+    - { role: start_svc_pulsar_mgr }
+
+- hosts: pulsar_metrics
+  gather_facts: false
+  any_errors_fatal: true
+  become: true
+  become_method: sudo
+  roles:
+    - { role: start_svc_prom_graf }
