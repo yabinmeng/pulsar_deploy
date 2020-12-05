@@ -9,7 +9,7 @@ show_debug_msg: false
 # Pulsar binary download URL
 # -------------------------------------------
 #
-pulsar_ver: 2.6.1
+pulsar_ver: 2.6.2
 
 # External Apache website for Pulsar
 #pulsar_download_url_base: https://archive.apache.org/dist/pulsar
