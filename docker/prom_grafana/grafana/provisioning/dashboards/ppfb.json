@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1607304287060,
+  "iteration": 1607307635159,
   "links": [],
   "panels": [
     {
@@ -183,7 +183,7 @@
         {
           "expr": "avg(ppfb_thrupt_Mbit_s{clnt_type=~\"$clnt_type\"})  by (clnt_type)",
           "interval": "",
-          "intervalFactor": 3,
+          "intervalFactor": 2,
           "legendFormat": "",
           "queryType": "randomWalk",
           "refId": "A"
@@ -283,7 +283,7 @@
         {
           "expr": "avg(ppfb_thrupt_failure_msg_s{clnt_type=~\"$clnt_type\"}) by (clnt_type)",
           "interval": "",
-          "intervalFactor": 3,
+          "intervalFactor": 2,
           "legendFormat": "",
           "queryType": "randomWalk",
           "refId": "A"
@@ -383,7 +383,7 @@
         {
           "expr": "avg(ppfb_latency_med{clnt_type=~\"$clnt_type\"}) by (clnt_type)",
           "interval": "",
-          "intervalFactor": 3,
+          "intervalFactor": 2,
           "legendFormat": "Median",
           "queryType": "randomWalk",
           "refId": "A"
@@ -391,14 +391,14 @@
         {
           "expr": "avg(ppfb_latency_95pct{clnt_type=~\"$clnt_type\"}) by (clnt_type)",
           "interval": "",
-          "intervalFactor": 3,
+          "intervalFactor": 2,
           "legendFormat": "95%",
           "refId": "B"
         },
         {
           "expr": "avg(ppfb_latency_99pct{clnt_type=~\"$clnt_type\"}) by (clnt_type)",
           "interval": "",
-          "intervalFactor": 3,
+          "intervalFactor": 2,
           "legendFormat": "99%",
           "refId": "C"
         }
@@ -539,5 +539,5 @@
   "timezone": "",
   "title": "Pulsar Perf Benchmark (PPFB)",
   "uid": "DFASpeAGk",
-  "version": 9
+  "version": 10
 }
