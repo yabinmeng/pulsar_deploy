@@ -9,3 +9,6 @@
     - { regexp: '^zkServers=', line: 'zkServers={{ zk_list_str }}' }
     - { regexp: '^httpServerPort=', line: 'httpServerPort={{ bk_stats_port }}' }
     - { regexp: '^prometheusStatsHttpPort=', line: 'prometheusStatsHttpPort={{ bk_stats_port }}' }
+    #- { regexp: '^# journalDirectories=', line: 'journalDirectories={{ bookie_storage_mnt_paths[0]}}/0,{{ bookie_storage_mnt_paths[0]}}/1,{{ bookie_storage_mnt_paths[0]}}/2,{{ bookie_storage_mnt_paths[0]}}/3'}
+    - { regexp: '^# journalDirectories=', line: 'journalDirectories={{ bookie_storage_dirs[0]}}' }
+    - { regexp: '^ledgerDirectories=', line: 'ledgerDirectories={{ bookie_storage_dirs[1]}}' }

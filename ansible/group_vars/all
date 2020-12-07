@@ -92,6 +92,10 @@ bookie_listening_port: 3181
 # - see comment about "zk_stats_port"
 bk_stats_port: 8000
 
+bookie_storage_path_base: /pulsar_bookie
+bookie_storage_dirs:
+  - "{{ bookie_storage_path_base }}/journal"
+  - "{{ bookie_storage_path_base }}/data"
 
 
 #

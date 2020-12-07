@@ -1,5 +1,5 @@
 {% set zklist = [] %}
-{% for node in play_hosts if hostvars[node].zookeeper is defined and hostvars[node].zookeeper|bool %}
+{% for node in groups['pulsar_cluster_core'] if hostvars[node].zookeeper is defined and hostvars[node].zookeeper|bool %}
 {% set ignored = zklist.append(node + ':2888:3888') %}
 {% endfor %}
 {{ zklist }}

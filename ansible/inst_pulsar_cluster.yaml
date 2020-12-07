@@ -60,6 +60,7 @@
   tasks:
     # Test whether bookie functions properly after they're up and running
     - name: Verifiy whether bookie works properly by running "bin/bookkeeper shell bookiesanity" command
+      become: false
       shell: "{{ tgt_pulsar_inst_dir }}/bin/bookkeeper shell bookiesanity > bookie_sanity_check.result"
       register: bookie_shell_output
       when: not standalone_bk|bool and bookie|bool

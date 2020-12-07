@@ -6,6 +6,12 @@
     system: yes
     state: present
 
+- name: Add "{{ ansible_ssh_user }}" into group "{{ pulsar_user }}" 
+  user:
+    name: "{{ ansible_ssh_user }}"
+    groups: "{{ pulsar_user }}"
+    append: yes
+
 - name: Create folder "{{ tgt_pkg_dir }}" 
   file:
     path: "{{ tgt_pkg_dir }}"
@@ -21,10 +27,11 @@
     owner: "{{ pulsar_user }}"
     group: "{{ pulsar_user }}"
 
-- name: Create folder "{{ tgt_pulsar_inst_dir }}"
+- name: Create Pulsar binary folder "{{ tgt_pulsar_inst_dir }}/logs"
   file:
-    path: "{{ tgt_pulsar_inst_dir }}"
+    path: "{{ tgt_pulsar_inst_dir }}/logs"
     state: directory
+    recurse: yes
     owner: "{{ pulsar_user }}"
     group: "{{ pulsar_user }}"
 
@@ -87,12 +94,15 @@
     path: "{{ tgt_pulsar_inst_dir }}"
     owner: "{{ pulsar_user }}"    
     group: "{{ pulsar_user }}"
+    mode: 0775
     recurse: yes
 
-- name: Change Pulsar log folder permission
+- name: Create bookie journal and data directories
   file:
-    path: "{{ tgt_pulsar_inst_dir }}/logs/"
+    path: "{{ item }}"
     state: directory
-    mode: 0777
+    mode: 0775
     owner: "{{ pulsar_user }}"    
     group: "{{ pulsar_user }}"  
+  with_items:
+    - "{{ bookie_storage_dirs }}"
