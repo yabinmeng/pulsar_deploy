@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1607307635159,
+  "iteration": 1607307635161,
   "links": [],
   "panels": [
     {
@@ -80,7 +80,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "avg(ppfb_thrupt_msg_s{clnt_type=~\"$clnt_type\"}) by (clnt_type)",
+          "expr": "avg(ppfb_thrupt_msg_s{instance=~\"$host\"}) by (clnt_type)",
           "hide": false,
           "interval": "",
           "intervalFactor": 2,
@@ -181,7 +181,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "avg(ppfb_thrupt_Mbit_s{clnt_type=~\"$clnt_type\"})  by (clnt_type)",
+          "expr": "avg(ppfb_thrupt_Mbit_s{instance=~\"$host\"}) by (clnt_type)",
           "interval": "",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -281,7 +281,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "avg(ppfb_thrupt_failure_msg_s{clnt_type=~\"$clnt_type\"}) by (clnt_type)",
+          "expr": "avg(ppfb_thrupt_failure_msg_s{instance=~\"$host\"}) by (clnt_type)",
           "interval": "",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -381,7 +381,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "avg(ppfb_latency_med{clnt_type=~\"$clnt_type\"}) by (clnt_type)",
+          "expr": "avg(ppfb_latency_med{instance=~\"$host\"}) by (clnt_type)",
           "interval": "",
           "intervalFactor": 2,
           "legendFormat": "Median",
@@ -389,14 +389,14 @@
           "refId": "A"
         },
         {
-          "expr": "avg(ppfb_latency_95pct{clnt_type=~\"$clnt_type\"}) by (clnt_type)",
+          "expr": "avg(ppfb_latency_95pct{instance=~\"$host\"}) by (clnt_type)",
           "interval": "",
           "intervalFactor": 2,
           "legendFormat": "95%",
           "refId": "B"
         },
         {
-          "expr": "avg(ppfb_latency_99pct{clnt_type=~\"$clnt_type\"}) by (clnt_type)",
+          "expr": "avg(ppfb_latency_99pct{instance=~\"$host\"}) by (clnt_type)",
           "interval": "",
           "intervalFactor": 2,
           "legendFormat": "99%",
@@ -492,10 +492,10 @@
           "selected": true,
           "tags": [],
           "text": [
-            "10.101.34.190:9108"
+            "172.16.10.213:9108"
           ],
           "value": [
-            "10.101.34.190:9108"
+            "172.16.10.213:9108"
           ]
         },
         "datasource": "Prometheus",
@@ -514,8 +514,8 @@
           },
           {
             "selected": true,
-            "text": "10.101.34.190:9108",
-            "value": "10.101.34.190:9108"
+            "text": "172.16.10.213:9108",
+            "value": "172.16.10.213:9108"
           }
         ],
         "query": "ppfb_thrupt_msg_s{instance=~\".+\"}",
