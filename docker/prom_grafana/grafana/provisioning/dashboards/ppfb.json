@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1607300683618,
+  "iteration": 1607304287060,
   "links": [],
   "panels": [
     {
@@ -349,7 +349,7 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 6,
-        "w": 24,
+        "w": 23,
         "x": 0,
         "y": 7
       },
@@ -539,5 +539,5 @@
   "timezone": "",
   "title": "Pulsar Perf Benchmark (PPFB)",
   "uid": "DFASpeAGk",
-  "version": 1
+  "version": 9
 }
