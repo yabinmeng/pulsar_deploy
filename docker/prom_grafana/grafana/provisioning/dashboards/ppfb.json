@@ -15,45 +15,33 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1607307635161,
+  "id": 14,
+  "iteration": 1607477401565,
   "links": [],
   "panels": [
     {
-      "collapsed": false,
-      "datasource": null,
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
-        "h": 1,
-        "w": 24,
+        "h": 7,
+        "w": 10,
         "x": 0,
         "y": 0
       },
-      "id": 24,
-      "panels": [],
-      "title": "Performance Metrics",
-      "type": "row"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 6,
-        "w": 8,
-        "x": 0,
-        "y": 1
-      },
       "hiddenSeries": false,
-      "id": 2,
+      "id": 6,
       "legend": {
         "avg": false,
         "current": false,
@@ -65,13 +53,14 @@
       },
       "lines": true,
       "linewidth": 1,
+      "links": [],
       "nullPointMode": "null",
       "options": {
         "alertThreshold": true
       },
       "percentage": false,
       "pluginVersion": "7.3.4",
-      "pointradius": 2,
+      "pointradius": 5,
       "points": false,
       "renderer": "flot",
       "seriesOverrides": [],
@@ -80,26 +69,30 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "avg(ppfb_thrupt_msg_s{instance=~\"$host\"}) by (clnt_type)",
-          "hide": false,
-          "interval": "",
+          "expr": "sum(pulsar_rate_in{job=~\"broker\"}) by (cluster)",
+          "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "",
-          "queryType": "randomWalk",
+          "legendFormat": "{{ cluster }} - In",
           "refId": "A"
+        },
+        {
+          "expr": "sum(pulsar_rate_out{job=~\"broker\"}) by (cluster)",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "{{ cluster }} - Out",
+          "refId": "B"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Throughput: Msg/s",
+      "title": "Message Rate (msg/s)",
       "tooltip": {
         "shared": true,
         "sort": 0,
         "value_type": "individual"
       },
-      "transformations": [],
       "type": "graph",
       "xaxis": {
         "buckets": null,
@@ -110,16 +103,15 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:113",
+          "decimals": null,
           "format": "short",
-          "label": null,
+          "label": "",
           "logBase": 1,
           "max": null,
           "min": "0",
           "show": true
         },
         {
-          "$$hashKey": "object:114",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -148,213 +140,13 @@
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 6,
-        "w": 8,
-        "x": 8,
-        "y": 1
-      },
-      "hiddenSeries": false,
-      "id": 4,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": false,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "7.3.4",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "avg(ppfb_thrupt_Mbit_s{instance=~\"$host\"}) by (clnt_type)",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "",
-          "queryType": "randomWalk",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Throughput: Mbit/s",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "$$hashKey": "object:1112",
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        },
-        {
-          "$$hashKey": "object:1113",
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 6,
-        "w": 7,
-        "x": 16,
-        "y": 1
-      },
-      "hiddenSeries": false,
-      "id": 8,
-      "interval": "",
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": false,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "7.3.4",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "avg(ppfb_thrupt_failure_msg_s{instance=~\"$host\"}) by (clnt_type)",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "",
-          "queryType": "randomWalk",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Throughput: Failure Msg/s",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "transformations": [],
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "$$hashKey": "object:1046",
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        },
-        {
-          "$$hashKey": "object:1047",
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 6,
-        "w": 23,
+        "h": 7,
+        "w": 10,
         "x": 0,
         "y": 7
       },
       "hiddenSeries": false,
-      "id": 6,
+      "id": 4,
       "legend": {
         "avg": false,
         "current": false,
@@ -423,7 +215,6 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:1262",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -432,7 +223,6 @@
           "show": true
         },
         {
-          "$$hashKey": "object:1263",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -492,10 +282,10 @@
           "selected": true,
           "tags": [],
           "text": [
-            "172.16.10.213:9108"
+            "All"
           ],
           "value": [
-            "172.16.10.213:9108"
+            "$__all"
           ]
         },
         "datasource": "Prometheus",
@@ -508,12 +298,12 @@
         "name": "host",
         "options": [
           {
-            "selected": false,
+            "selected": true,
             "text": "All",
             "value": "$__all"
           },
           {
-            "selected": true,
+            "selected": false,
             "text": "172.16.10.213:9108",
             "value": "172.16.10.213:9108"
           }
@@ -532,12 +322,12 @@
     ]
   },
   "time": {
-    "from": "now-30m",
+    "from": "now-20m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Pulsar Perf Benchmark (PPFB)",
-  "uid": "DFASpeAGk",
-  "version": 10
+  "title": "PPFB",
+  "uid": "8_27OnJMk",
+  "version": 1
 }
