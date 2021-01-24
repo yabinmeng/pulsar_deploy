@@ -20,12 +20,25 @@
     owner: "{{ pulsar_user }}"
     group: "{{ pulsar_user }}"
 
-- name: Download pulsar version "{{ pulsar_ver }}"
-  get_url:
-    url: "{{ pulsar_bin_download_url }}"
+- name: Check if DS Pulsar distro already exists on remote host
+  stat:
+    path: "{{ tgt_pkg_dir }}/apache-pulsar-{{ pulsar_ver }}-bin.tar.gz"
+  register: ds_distro_stat
+
+- name: Copy file DS Pulsar distro from local to remote if remote file doesn't exist
+  copy:
+    src: "{{ ds_distro_local_folder }}/apache-pulsar-{{ pulsar_ver }}-bin.tar.gz"
     dest: "{{ tgt_pkg_dir }}/apache-pulsar-{{ pulsar_ver }}-bin.tar.gz"
-    owner: "{{ pulsar_user }}"
-    group: "{{ pulsar_user }}"
+  when: not ds_distro_stat.stat.exists
+
+# - name: Download pulsar version "{{ pulsar_ver }}"
+#   set_fact:
+#     pulsar_bin_download_url: 
+#   get_url:
+#     url: "{{ pulsar_bin_download_url }}"
+#     dest: "{{ tgt_pkg_dir }}/apache-pulsar-{{ pulsar_ver }}-bin.tar.gz"
+#     owner: "{{ pulsar_user }}"
+#     group: "{{ pulsar_user }}"
 
 - name: Create Pulsar binary folder "{{ tgt_pulsar_inst_dir }}/logs"
   file:
@@ -51,7 +64,20 @@
     owner: "{{ pulsar_user }}"
     group: "{{ pulsar_user }}"
     recurse: yes
-  when: builtin_connector|bool
+  # when: builtin_connector|bool
+
+- name: Check if DS C* sink connector file already exists on remote host
+  stat:
+    path: "{{ tgt_pulsar_inst_dir }}/connectors/cassandra-enhanced-pulsar-sink-1.4.0.nar"
+  register: ds_sink_stat
+
+- name: Copy file DS Pulsar distro from local to remote if remote file doesn't exist
+  copy:
+    src: "{{ ds_distro_local_folder }}/cassandra-enhanced-pulsar-sink-1.4.0.nar"
+    dest: "{{ tgt_pulsar_inst_dir }}/connectors/cassandra-enhanced-pulsar-sink-1.4.0.nar"
+    owner: "{{ pulsar_user }}"
+    group: "{{ pulsar_user }}"
+  when: not ds_sink_stat.stat.exists
 
 - name: Download Pulsar built-in I/O Connectors, if needed
   get_url:
@@ -70,7 +96,7 @@
     owner: "{{ pulsar_user }}"    
     group: "{{ pulsar_user }}"    
     recurse: yes
-  when: builtin_connector | bool
+  # when: builtin_connector | bool
 
 - name: Download Pulsar TieredStorage Offloaders, if needed
   get_url:
@@ -88,6 +114,16 @@
     extra_opts: [--strip-components=2]
     owner: "{{ pulsar_user }}"    
     group: "{{ pulsar_user }}"
+  when: tierstorage_offloader | bool
+
+- name: Copy dependency jar files (e.g. for connectors) from local to remote
+  copy:
+    src: "{{ ds_distro_local_folder }}/lib/{{ item }}"
+    dest: "{{ tgt_pulsar_inst_dir }}/lib/{{ item }}"
+    owner: "{{ pulsar_user }}"
+    group: "{{ pulsar_user }}"
+  with_items:
+    - kafka-clients-2.7.0.jar
 
 - name: Fix permissions on the extract directory and sub-directories
   file:

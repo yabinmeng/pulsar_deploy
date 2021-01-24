@@ -1,17 +1,21 @@
 ---
 # Download Pulsar binaries
 - hosts: pulsar_clnt
-  gather_facts: false
+  gather_facts: true
   any_errors_fatal: true
   become: true
   become_method: sudo
   roles: 
+    ## OS distro
     - { role: inst_pulsar_bin, when: inst_pulsar_bin is not defined or inst_pulsar_bin|bool}
+    ## DS distro
+    #- { role: inst_pulsar_ds_distro_bin, when: inst_pulsar_bin is not defined or inst_pulsar_bin|bool}
+
 
 
 # Make necessary configuration changes for all Pulsar components
 - hosts: pulsar_cluster_core
-  gather_facts: true
+  gather_facts: false
   any_errors_fatal: true
   become: true
   become_method: sudo

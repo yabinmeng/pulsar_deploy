@@ -10,6 +10,37 @@
     - { role: stop_svc_zookeeper, when: zookeeper|bool, serial: 1 }
 
 
+# If request, clean up bookie data directories, old broker and bookie logs
+- hosts: pulsar_cluster_core
+  any_errors_fatal: true
+  become: true
+  become_method: sudo
+  tasks:
+  - name: If requested, clean-up bookie data and logs
+    shell: rm -rf  {{ item }}/*
+    args:
+      warn: no
+    with_items:
+      - "{{ bookie_storage_mnt_paths }}"
+      - "{{ tgt_pulsar_inst_dir }}/logs"
+    when: del_inst is defined and del_inst|bool and bookie|bool 
+
+# Clean up zookeeper data and logs if requested
+- hosts: pulsar_cluster_core
+  any_errors_fatal: true
+  become: true
+  become_method: sudo
+  tasks:
+  - name: If requested, clean-up zookeeper data and logs
+    shell: rm -rf {{ item }}
+    args:
+      warn: no
+    with_items:
+      - "{{ tgt_pulsar_inst_dir }}/data/zookeeper/version*"
+      - "{{ tgt_pulsar_inst_dir }}/logs/*"
+    when: del_inst is defined and del_inst|bool and zookeeper|bool
+
+
 - hosts: pulsar_clnt
   gather_facts: false
   any_errors_fatal: true

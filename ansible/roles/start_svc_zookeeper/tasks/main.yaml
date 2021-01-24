@@ -8,7 +8,7 @@
   become: true
   become_method: sudo
   become_user: "{{ pulsar_user }}"
-  shell: PULSAR_EXTRA_OPTS="-Dstats_server_port={{ zk_stats_port }}" {{ tgt_pulsar_inst_dir }}/bin/pulsar-daemon start zookeeper
+  shell: "PULSAR_MEM=\"{{ pulsar_mem_zk }}\" PULSAR_EXTRA_OPTS=\"-Dstats_server_port={{ zk_stats_port }}\" {{ tgt_pulsar_inst_dir }}/bin/pulsar-daemon start zookeeper"
   when: not stat_result.stat.exists
 
 - name: Wait until zookeeper listeneing port {{ zk_clnt_port }} is ready

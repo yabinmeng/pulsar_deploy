@@ -8,7 +8,7 @@
   become: true
   become_method: sudo
   become_user: "{{ pulsar_user }}"
-  shell: "{{ tgt_pulsar_inst_dir }}/bin/pulsar-daemon start broker"
+  shell: "PULSAR_MEM=\"{{ pulsar_mem_broker }}\" {{ tgt_pulsar_inst_dir }}/bin/pulsar-daemon start broker"
   when: not stat_result.stat.exists
 
 - name: Wait until broker service ports and web service prots are ready

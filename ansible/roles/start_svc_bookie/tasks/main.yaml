@@ -8,7 +8,7 @@
   become: true
   become_method: sudo
   become_user: "{{ pulsar_user }}"
-  shell: "{{ tgt_pulsar_inst_dir }}/bin/pulsar-daemon start bookie"
+  shell: "PULSAR_MEM=\"{{ pulsar_mem_bookie }}\" {{ tgt_pulsar_inst_dir }}/bin/pulsar-daemon start bookie"
   when: not stat_result.stat.exists
 
 - name: Wait until bookkeeper listeneing port {{ bookie_listening_port }} is ready
